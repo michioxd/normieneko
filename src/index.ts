@@ -34,7 +34,7 @@ client.once(Events.ClientReady, async c => {
                 }
             ]
         });
-        setTimeout(fetchMemCount, 1000);
+        setTimeout(fetchMemCount, 5000);
     }
 
     fetchMemCount();

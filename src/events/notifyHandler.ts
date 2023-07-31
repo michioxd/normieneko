@@ -25,7 +25,14 @@ const evt = {
                 .setTimestamp();
 
             if (String(notifyImage).length > 1) {
-                embed.setImage(notifyImage)
+                try {
+                    new URL(String(notifyImage));
+                    embed.setImage(notifyImage)
+                } catch (err) {
+                    await interaction.reply({ content: `Lỗi: Liên kết không đúng định dạng!\n\nLiên kết bạn đã gửi:\n\`\`\`${notifyImage}\n\`\`\`\n\nCụ thể:\n\`\`\`${err}\n\`\`\`` });
+                    return;
+                }
+
             }
 
             const channel = botHandle.channels.cache.get(notifyIdChannel);
