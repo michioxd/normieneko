@@ -29,7 +29,7 @@ client.once(Events.ClientReady, async c => {
             activities: [
                 {
                     name: `${fullMember} thành viên`,
-                    type: ActivityType.Streaming,
+                    type: ActivityType.Watching,
                     url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                 }
             ]
