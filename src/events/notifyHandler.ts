@@ -22,7 +22,7 @@ const evt = {
             if (
                 !(/^#([A-Fa-f0-9]{6})$/.test(String(notifySideColor)))
             ) {
-                await interaction.reply({ content: `**Lỗi**: Mã màu không đúng định dạng, chỉ chấp nhận ở dạng HEX (#AABBCC)!\n\nMã màu đã gửi:\n\`\`\`\n${String(notifySideColor)}\n\`\`\`\n\nBiểu thức chính quy đang sử dụng:\n\`\`\`\n^#([A-Fa-f0-9]{6})$\n\`\`\`` });
+                await interaction.reply({ content: `**Lỗi**: Mã màu không đúng định dạng, chỉ chấp nhận ở dạng HEX (#AABBCC)!\n\nMã màu đã gửi:\n\`\`\`\n${String(notifySideColor)}\n\`\`\`\nBiểu thức chính quy đang sử dụng:\n\`\`\`\n^#([A-Fa-f0-9]{6})$\n\`\`\`` });
                 return;
             }
 
@@ -41,7 +41,7 @@ const evt = {
                     new URL(String(notifyImage));
                     embed.setImage(notifyImage)
                 } catch (err) {
-                    await interaction.reply({ content: `**Lỗi**: Liên kết ảnh không đúng định dạng!\n\nLiên kết ảnh đã gửi:\n\`\`\`\n${String(notifyImage)}\n\`\`\`\n\nCụ thể:\n\`\`\`\n${err}\n\`\`\`` });
+                    await interaction.reply({ content: `**Lỗi**: Liên kết ảnh không đúng định dạng!\n\nLiên kết ảnh đã gửi:\n\`\`\`\n${String(notifyImage)}\n\`\`\`\nCụ thể:\n\`\`\`\n${err}\n\`\`\`` });
                     return;
                 }
 
