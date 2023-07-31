@@ -25,7 +25,7 @@ client.once(Events.ClientReady, async c => {
     const fetchMemCount = async () => {
         const memberCount = await guild.members.fetch();
         const fullMember = memberCount.filter(member => !member.user.bot).size;
-        if (fullMember > lastSize) {
+        if (fullMember !== lastSize) {
             lastSize = fullMember;
             client.user.setPresence({
                 status: "online",
