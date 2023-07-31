@@ -22,7 +22,7 @@ const command = {
             .setCustomId('notifySideColor')
             .setLabel("Mã màu (HEX)")
             .setPlaceholder('Mã màu ở định dạng hex, mặc định #32a852')
-            .setValue('#32a852')
+            .setValue('#07fa48')
             .setMinLength(1)
             .setStyle(TextInputStyle.Short);
 
@@ -49,11 +49,11 @@ const command = {
             .setRequired(false);
         const notifyIdChannel = new TextInputBuilder()
             .setCustomId('notifyIdChannel')
-            .setLabel("ID Channel (cứ để nguyên)")
+            .setLabel("ID Channel (để nguyên)")
             .setPlaceholder('ID Channel muốn gửi, để nguyên nếu đã chọn bằng lệnh')
             .setValue(interaction.options.getString('channel'))
             .setMinLength(1)
-            .setStyle(TextInputStyle.Paragraph);
+            .setStyle(TextInputStyle.Short);
 
         const s1 = new ActionRowBuilder().addComponents(notifyTitle);
         const s2 = new ActionRowBuilder().addComponents(notifyContent);
