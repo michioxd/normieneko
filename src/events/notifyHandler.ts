@@ -29,7 +29,7 @@ const evt = {
                     new URL(String(notifyImage));
                     embed.setImage(notifyImage)
                 } catch (err) {
-                    await interaction.reply({ content: `Lỗi: Liên kết không đúng định dạng!\n\nLiên kết bạn đã gửi:\n\`\`\`${notifyImage}\n\`\`\`\n\nCụ thể:\n\`\`\`${err}\n\`\`\`` });
+                    await interaction.reply({ content: `Lỗi: Liên kết không đúng định dạng!\n\nLiên kết bạn đã gửi:\n\`\`\`${String(notifyImage)}\n\`\`\`\n\nCụ thể:\n\`\`\`${err}\n\`\`\`` });
                     return;
                 }
 
