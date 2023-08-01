@@ -7,12 +7,9 @@ import cmds from './command.js';
 
 import './events/welcome.js';
 import eventLists from './event.js';
+import client from './client.js';
 
 dotenv.config();
-
-const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
-});
 
 client.once(Events.ClientReady, c => {
     console.log(`[BOT] Logged in as ${c.user.tag}`);
@@ -47,6 +44,7 @@ client.once(Events.ClientReady, async c => {
 client.login(process.env.TOKEN);
 
 const botHandle = client as CustomClient;
+
 
 
 // Handle Commands
@@ -94,6 +92,5 @@ for (const evt of eventLists) {
         client.on(evt.name, (...args) => evt.execute(...args));
     }
 }
-
 
 export default botHandle;
