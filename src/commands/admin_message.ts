@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ModalBuilder, PermissionFlagsBits, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import client from "../client.js";
 
 
