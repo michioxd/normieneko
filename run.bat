@@ -2,5 +2,5 @@
 goto main
 
 :main
-npm run start
+npm run host
 goto main
