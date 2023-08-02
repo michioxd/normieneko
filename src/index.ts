@@ -20,20 +20,26 @@ client.once(Events.ClientReady, async c => {
 
     let lastSize = 0;
     const fetchMemCount = async () => {
-        const memberCount = await guild.members.fetch();
-        const fullMember = memberCount.filter(member => !member.user.bot).size;
-        if (fullMember !== lastSize) {
-            lastSize = fullMember;
-            client.user.setPresence({
-                status: "online",
-                activities: [
-                    {
-                        name: `${fullMember} thành viên`,
-                        type: ActivityType.Watching,
-                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                    }
-                ]
-            });
+        try {
+            const memberCount = await guild.members.fetch();
+            const fullMember = memberCount.filter(member => !member.user.bot).size;
+
+            if (fullMember !== lastSize) {
+                lastSize = fullMember;
+                client.user.setPresence({
+                    status: "online",
+                    activities: [
+                        {
+                            name: `${fullMember} thành viên`,
+                            type: ActivityType.Watching,
+                            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                        }
+                    ]
+                });
+            }
+
+        } catch (err) {
+            console.log("[ERROR] Cannot get guild members: " + err);
         }
         setTimeout(fetchMemCount, 5000);
     }
