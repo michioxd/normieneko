@@ -11,7 +11,7 @@ const evt = {
         const memId = mem.id;
 
         //@ts-ignore
-        await channel.send(`Chào mừng bạn <@!${memId}> đã đến với sivi ||${Math.round(Math.random()) > 0 ? "trẩu" : "rách"}|| này\nđám <@&1132926013958008842> dậy chào coi`);
+        await channel.send(`Chào mừng bạn <@!${memId}> đã đến với sivi ||${Math.round(Math.random()) > 0 ? "trẩu" : "rách"}|| này\nđám <@&1132926013958008842> dậy gáy coi`);
     }
 }
 
