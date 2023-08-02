@@ -1,4 +1,5 @@
 import { Events } from "discord.js";
+import { readFile } from "node:fs/promises";
 
 import botHandle from "../index.js";
 
@@ -10,16 +11,18 @@ const evt = {
 
         const memId = mem.id;
 
-        //@ts-ignore
-        // await channel.send({
-        //     content: `Chào mừng bạn <@!${memId}> đã đến với sivi ||${Math.round(Math.random()) > 0 ? "trẩu" : "rách"}|| này\nđám <@&1132926013958008842> dậy gáy coi`,
-        //     files: [{
-        //         attachment: './../../assets/welcome.jpg',
-        //         name: 'welcome.jpg'
-        //     }]
-        // });
-        //@ts-ignore
-        await channel.send(`Chào mừng bạn <@!${memId}> đã đến với sivi ||${Math.round(Math.random()) > 0 ? "trẩu" : "rách"}|| này\nđám <@&1132926013958008842> dậy gáy coi`);
+        const messageContent = `Chào mừng bạn <@!${memId}> đã đến với sivi ||${Math.round(Math.random()) > 0 ? "trẩu" : "rách"}|| này\nđám <@&1132926013958008842> dậy gáy coi`;
+
+        try {
+            const imageBuffer = await readFile('./assets/welcome.jpg');
+
+            //@ts-ignore
+            await channel.send({ content: messageContent, files: [imageBuffer] });
+        } catch (error) {
+            console.error('[ERROR] Cannot get image:', error);
+            //@ts-ignore
+            await channel.send(messageContent);
+        }
     }
 }
 
