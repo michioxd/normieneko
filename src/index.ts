@@ -8,11 +8,13 @@ import cmds from './command.js';
 import './events/welcome.js';
 import eventLists from './event.js';
 import client from './client.js';
+import log from './utils/logger.js';
 
 dotenv.config();
 
 client.once(Events.ClientReady, c => {
-    console.log(`[BOT] Logged in as ${c.user.tag}`);
+    console.log();
+    log({ type: 1, message: `Ready! Logged in as ${c.user.tag}`, noLogFile: true });
 });
 
 client.once(Events.ClientReady, async c => {
@@ -39,7 +41,8 @@ client.once(Events.ClientReady, async c => {
             }
 
         } catch (err) {
-            console.log("[ERROR] Cannot get guild members: " + err);
+            log({ type: 3, message: "Cannot get guild members!" });
+            //console.log("[ERROR] Cannot get guild members: " + err);
         }
         setTimeout(fetchMemCount, 5000);
     }
