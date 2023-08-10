@@ -38,7 +38,7 @@ const evt = {
             const response = await axios.post(
                 'https://api.simsimi.vn/v2/simtalk',
                 new URLSearchParams({
-                    'text': encodeURIComponent(msg),
+                    'text': (msg),
                     'lc': 'vn'
                 })
             );
