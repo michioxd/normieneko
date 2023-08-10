@@ -29,10 +29,10 @@ const evt = {
 
         if (msg.length < 1) return;
 
-        if (Date.now() - lastTimeBomb <= 7777) {
-            //@ts-ignore
-            channel.send("Duma sống chậm thôi cháy bot nhà người ta :)) Đợi 7.777s nữa đi :))");
-        }
+        // if (Date.now() - lastTimeBomb <= 7777) {
+        //     //@ts-ignore
+        //     channel.send("Duma sống chậm thôi cháy bot nhà người ta :)) Đợi 7.777s nữa đi :))");
+        // }
 
         try {
             const response = await axios.post(
