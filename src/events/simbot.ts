@@ -18,11 +18,11 @@ const evt = {
 
         if (ct.content === "help" || ct.content === "giup" || ct.content === "deo biet dung") {
             //@ts-ignore
-            channel.send("Cách dùng `$ <nội dung cần nhắn>`\nVí dụ: `$ đm m nqu the =))`");
+            channel.send("Cách dùng `. <nội dung cần nhắn>`\nVí dụ: `. đm m nqu the =))`");
             return;
         }
 
-        if (!ct.content.startsWith("$")) return;
+        if (!ct.content.startsWith(".")) return;
 
         const msg = ct.content.slice(2, ct.content.length);
         //const msg = ct.content;
@@ -49,10 +49,10 @@ const evt = {
             lastTimeBomb = Date.now();
 
         } catch (e) {
-            log({ type: 'error', message: "Cannot fetch simsimi api!" });
+            log({ type: 'error', message: "Cannot fetch simsimi api!" + e });
 
             //@ts-ignore
-            channel.send(`\`\`\`\nĐã xảy ra sự cố, vui lòng thử lại sau! [NO_FETCH]\n\`\`\``);
+            channel.send(`\`\`\`\nĐã xảy ra sự cố, vui lòng thử lại sau! [ERR_2]\n\`\`\``);
         }
 
     }
