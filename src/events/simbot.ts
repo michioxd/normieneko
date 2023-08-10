@@ -16,7 +16,7 @@ const evt = {
 
         const channel = client.channels.cache.get(ct.channelId);
 
-        if (ct.content === "help" || ct.content === "giup" || ct.content === "deo biet dung") {
+        if (ct.content === "help" || ct.content === "giup" || ct.content === "deo biet dung" || ct.content === "$" || ct.content === ".") {
             //@ts-ignore
             channel.send("Cách dùng `.<nội dung cần nhắn>` \nVí dụ: `.đm m nqu the =))`");
             return;
