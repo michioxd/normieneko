@@ -36,7 +36,7 @@ const evt = {
 
         try {
             const response = await axios.post(
-                'https://api.simsimi.vn/v2/simtalk',
+                'https://api.simsimi.vn/v1/simtalk',
                 new URLSearchParams({
                     'text': msg,
                     'lc': 'vn'
