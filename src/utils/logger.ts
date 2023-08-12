@@ -17,7 +17,9 @@ export default async function log({ type, message, noLogFile }: LogType) {
 
     const finalLog = `[${(new Date().toLocaleString())}][${logLevel}] ${message ?? "Unknown!"}`;
 
-    console.log(finalLog);
+    if (type === 2) console.warn(finalLog);
+    else if (type === 3) console.error(finalLog);
+    else console.log(finalLog);
 
     if (!noLogFile) {
         try {
