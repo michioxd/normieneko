@@ -11,7 +11,7 @@ const evt = {
 
         const memId = mem.id;
 
-        const messageContent = `Chào mừng bạn <@!${memId}> đã đến với sivi ||${Math.round(Math.random()) > 0 ? "trẩu" : "rách"}|| này\nđám <@&1132926013958008842> dậy gáy coi`;
+        const messageContent = `Chào mừng bạn **<@!${memId}>** đã đến với sivi chuyên ***đập mọi loại đá*** theo **tiêu chuẩn châu á ISO 9001:2023**\nBạn **đập đá** là niềm **vinh hạnh** của toàn thể **đáer** chúng tôi.\nđám <@&1132926013958008842> dậy gáy coi`;
 
         try {
             const imageBuffer = await readFile('./assets/welcome.jpg');
