@@ -17,8 +17,7 @@ const evt = {
         const channel = client.channels.cache.get(ct.channelId);
 
         if (ct.content === "help" || ct.content === "giup" || ct.content === "deo biet dung" || ct.content === "$" || ct.content === ".") {
-            //@ts-ignore
-            channel.send("Cách dùng `.<nội dung cần nhắn>` \nVí dụ: `.đm m nqu the =))`");
+            ct.reply("Cách dùng `.<nội dung cần nhắn>` \nVí dụ: `.đm m nqu the =))`");
             return;
         }
 
@@ -34,9 +33,12 @@ const evt = {
         //     channel.send("Duma sống chậm thôi cháy bot nhà người ta :)) Đợi 7.777s nữa đi :))");
         // }
 
+        //@ts-ignore
+        channel.sendTyping();
+
         try {
             const response = await axios.post(
-                'https://api.simsimi.vn/v1/simtalk',
+                'https://api.simsimi.vn/v2/simtalk',
                 new URLSearchParams({
                     'text': msg,
                     'lc': 'vn'
@@ -44,15 +46,19 @@ const evt = {
             );
 
             //@ts-ignore
-            channel.send(response.data.message ?? `\`\`\`\nĐã xảy ra sự cố, vui lòng thử lại sau! [EMPTY]\n\`\`\``);
+            //channel.send(response.data.message ?? `\`\`\`\nĐã xảy ra sự cố, vui lòng thử lại sau! [EMPTY]\n\`\`\``);
+
+            ct.reply(response.data.message ?? `\`\`\`\nĐã xảy ra sự cố, vui lòng thử lại sau! [EMPTY]\n\`\`\``);
 
             lastTimeBomb = Date.now();
 
         } catch (e) {
-            log({ type: 'error', message: "Cannot fetch simsimi api!" + e });
+            log({ type: 'error', message: "Cannot fetch simsimi api: " + e });
 
             //@ts-ignore
-            channel.send(`\`\`\`\nĐã xảy ra sự cố, vui lòng thử lại sau! [ERR_2]\n\`\`\``);
+            //channel.send(`\`\`\`\nĐã xảy ra sự cố, vui lòng thử lại sau! [ERR_2]\n\`\`\``);
+
+            ct.reply(`\`\`\`\nĐã xảy ra sự cố, vui lòng thử lại sau! [ERR_2]\n\`\`\``);
         }
 
     }
