@@ -50,7 +50,7 @@ const command = {
         const months = interaction.options.getInteger('thang');
         const years = interaction.options.getInteger('nam');
 
-        if (days < 1 && days > 31) {
+        if (days < 1 || days > 31) {
             interaction.reply({
                 content: "**Lỗi:** Ngày sinh chỉ ở trong giới hạn từ 1 đến 31.",
                 ephemeral: true
@@ -59,7 +59,7 @@ const command = {
             return;
         }
 
-        if (months < 1 && months > 12) {
+        if (months < 1 || months > 12) {
             interaction.reply({
                 content: "**Lỗi:** Tháng sinh chỉ ở trong giới hạn từ 1 đến 31.",
                 ephemeral: true
@@ -68,7 +68,7 @@ const command = {
             return;
         }
 
-        if (years < 1980 && years > 2023) {
+        if (years < 1980 || years > 2023) {
             interaction.reply({
                 content: "**Lỗi:** Năm sinh chỉ ở trong giới hạn từ 1980 đến 2023.",
                 ephemeral: true
