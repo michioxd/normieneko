@@ -9,8 +9,16 @@ import './events/welcome.js';
 import eventLists from './event.js';
 import client from './client.js';
 import log from './utils/logger.js';
+import db from './db.js';
 
 dotenv.config();
+
+try {
+    await db.authenticate();
+    log({ type: 1, message: `DB Ok`, noLogFile: true });
+} catch (error) {
+    log({ type: 3, message: 'Unable to connect to the database: ' + error, noLogFile: true });
+}
 
 client.once(Events.ClientReady, c => {
     console.log();

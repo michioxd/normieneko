@@ -1,4 +1,4 @@
-import { Awaitable, Client, SlashCommandBuilder } from "discord.js";
+import { Awaitable, Client, CommandInteraction, SlashCommandBuilder } from "discord.js";
 
 export interface CustomClient extends Client {
     commands: any
@@ -13,4 +13,9 @@ export interface EventType {
     name: any,
     once: boolean,
     execute(interaction: any): Promise<void>
+}
+
+export interface UserType {
+    uid: number,
+    birthday: number
 }
