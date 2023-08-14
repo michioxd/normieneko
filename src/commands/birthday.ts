@@ -103,15 +103,13 @@ const command = {
 
             if (confirmation.customId === 'birthday_confirm') {
 
-                const build = User.build({
-                    uid: interaction.member.id,
-                    birthdayDay: days,
-                    birthdayMonth: months,
-                    birthdayYear: years
-                });
-
                 try {
-                    await build.save();
+                    await User.create({
+                        uid: interaction.member.id,
+                        birthdayDay: days,
+                        birthdayMonth: months,
+                        birthdayYear: years
+                    });
 
                     await confirmation.update({ content: `Ngày sinh đã được đặt, ngày sinh của bạn là **${(days < 10 ? "0" + days : days)}/${(months < 10 ? "0" + months : months)}/${years}**.`, components: [] });
                 } catch (e) {
