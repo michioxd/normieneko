@@ -91,7 +91,7 @@ const command = {
             .addComponents(cancel, confirm);
 
         const response = await interaction.reply({
-            content: `<:aax_cat_chinchon:1132691523805392968> <@!${interaction.member.id}> Bạn đã đặt ngày sinh của bạn là **${(days < 10 ? "0" + days : days)}/${(months < 10 ? "0" + months : months)}/${years}**.\n**Xin lưu ý:** Một khi bạn đã đặt thì sẽ **không thể thay đổi lại được**, hãy nhấn các nút phía dưới để xác nhận.\nQuá trình này sẽ bị huỷ bỏ trong vòng 1 phút kể từ khi bạn gọi lệnh này!`,
+            content: `<:aax_cat_chinchon:1132691523805392968> Ê ê <@!${interaction.member.id}>, bạn đang sử dụng lệnh đặt ngày sinh và bạn đang đặt ngày sinh của bạn là **${(days < 10 ? "0" + days : days)}/${(months < 10 ? "0" + months : months)}/${years}**.\n**Xin lưu ý:** Một khi bạn đã đặt thì sẽ **không thể thay đổi lại được**, hãy nhấn các nút ở phía dưới để xác nhận.\nQuá trình này sẽ bị huỷ bỏ trong vòng 1 phút kể từ khi bạn yêu cầu lệnh này!`,
             components: [row],
             ephemeral: true
         });
@@ -105,7 +105,9 @@ const command = {
 
                 const build = User.build({
                     uid: interaction.member.id,
-                    birthday: (new Date(`${years}/${(months < 10 ? "0" + months : months)}/${(days < 10 ? "0" + days : days)}`)).getTime()
+                    birhdayDay: days,
+                    birthdayMonth: months,
+                    birthdayYear: years
                 });
 
                 try {

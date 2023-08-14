@@ -17,5 +17,7 @@ export interface EventType {
 
 export interface UserType {
     uid: number,
-    birthday: number
+    birthdayDay: number,
+    birthdayYear: number,
+    birthdayMonth: number
 }

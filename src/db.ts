@@ -10,7 +10,9 @@ const db = new Sequelize({
 
 const User = db.define("user", {
     uid: DataTypes.INTEGER,
-    birthday: DataTypes.INTEGER
+    birthdayDay: DataTypes.INTEGER,
+    birthdayMonth: DataTypes.INTEGER,
+    birthdayYear: DataTypes.INTEGER,
 });
 
 try {
