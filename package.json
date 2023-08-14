@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node dist/deployCommand.js && node dist/index.js",
-    "host": "tsc && node dist/deployCommand.js && pm2 start dist/index.js",
+    "host": "git pull && pm2 stop all && tsc && node dist/deployCommand.js && pm2 start dist/index.js",
     "build": "tsc"
   },
   "keywords": [],
