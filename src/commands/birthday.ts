@@ -105,7 +105,7 @@ const command = {
 
                 const build = User.build({
                     uid: interaction.member.id,
-                    birhdayDay: days,
+                    birthdayDay: days,
                     birthdayMonth: months,
                     birthdayYear: years
                 });
