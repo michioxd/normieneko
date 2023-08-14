@@ -9,7 +9,7 @@ const db = new Sequelize({
 
 
 const User = db.define("user", {
-    uid: DataTypes.INTEGER,
+    uid: DataTypes.STRING,
     birthdayDay: DataTypes.INTEGER,
     birthdayMonth: DataTypes.INTEGER,
     birthdayYear: DataTypes.INTEGER,
