@@ -22,7 +22,7 @@ const evt = {
 
             let emotionList = "";
             emotion.map(d => {
-                emotionList += "`" + d.name + "` ";
+                emotionList += "`" + d.name + "`, ";
             });
 
             const embed = new EmbedBuilder()
