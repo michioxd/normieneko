@@ -1,4 +1,4 @@
-import { Awaitable, Client, CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { Awaitable, Client, ColorResolvable, CommandInteraction, HexColorString, SlashCommandBuilder } from "discord.js";
 
 export interface CustomClient extends Client {
     commands: any
@@ -20,4 +20,11 @@ export interface UserType {
     birthdayDay: number,
     birthdayYear: number,
     birthdayMonth: number
+}
+
+export type EmotionType = {
+    name: string,
+    text: string,
+    image: string[],
+    color: ColorResolvable
 }

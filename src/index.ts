@@ -13,6 +13,8 @@ import db from './db.js';
 
 dotenv.config();
 
+export const globalPrefix = ";";
+
 try {
     await db.authenticate();
     log({ type: 1, message: `DB Ok`, noLogFile: true });
