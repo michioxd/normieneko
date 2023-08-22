@@ -40,10 +40,7 @@ const evt = {
             try {
                 const user2nd = await client.users.fetch(userId);
 
-                // const image1Path = (await axios({ url: ct.author.avatarURL(), responseType: "arraybuffer" })).data;
-                // const image2Path = (await axios({ url: user2nd.avatarURL(), responseType: "arraybuffer" })).data;
-
-                let image1Path, image2Path;
+                let image1Path: sharp.SharpOptions | Buffer, image2Path: sharp.SharpOptions | Buffer;
 
                 try {
                     image1Path = (await axios({ url: ct.author.avatarURL(), responseType: "arraybuffer" })).data as Buffer;
