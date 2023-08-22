@@ -42,7 +42,12 @@ try {
         { input: image2, left: 400, top: 0 },
         {
             input: Buffer.from(
-                `<svg width="200" height="50"><text x="50%" y="50%" font-size="12" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">firstUserName</text></svg>`
+                `<svg width="200" height="50">
+
+                <text x="50.5%" y="50.5%" font-size="14" fill="#FFFFFFCC" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">firstUserName</text>
+                <text x="50%" y="50%" font-size="14" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">firstUserName</text>
+                
+                </svg>`
             ),
             left: 0,
             top: 200
@@ -50,7 +55,11 @@ try {
         {
             input: Buffer.from(
                 `<svg width="200" height="50">
+                <text x="51%" y="51%" font-size="18" fill="#FFFFFFCC" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
                 <text x="50%" y="50%" font-size="18" fill="#57FF70" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
+
+                <text x="51%" y="71%" font-size="18" fill="#FFFFFFCC" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">powered by michioxd</text>
+                <text x="50%" y="70%" font-size="18" fill="#57FF70" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
                 </svg>`
             ),
             left: 200,
@@ -58,7 +67,7 @@ try {
         },
         {
             input: Buffer.from(
-                `<svg width="200" height="50"><text x="50%" y="50%" font-size="12" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">secondUserName</text></svg>`
+                `<svg width="200" height="50"><text x="50%" y="50%" font-size="14" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">secondUserName</text></svg>`
             ),
             left: 400,
             top: 200
