@@ -1,4 +1,5 @@
 import { EmbedBuilder, Events, Message } from "discord.js";
+import { readFile } from 'node:fs/promises';
 
 import { globalPrefix } from "../../index.js";
 
@@ -34,11 +35,27 @@ const evt = {
 
             const randomPercent = Math.floor(Math.random() * 100) + 1;
 
+
+
             try {
                 const user2nd = await client.users.fetch(userId);
 
-                const image1Path = (await axios({ url: ct.author.avatarURL(), responseType: "arraybuffer" })).data;
-                const image2Path = (await axios({ url: user2nd.avatarURL(), responseType: "arraybuffer" })).data;
+                // const image1Path = (await axios({ url: ct.author.avatarURL(), responseType: "arraybuffer" })).data;
+                // const image2Path = (await axios({ url: user2nd.avatarURL(), responseType: "arraybuffer" })).data;
+
+                let image1Path, image2Path;
+
+                try {
+                    image1Path = (await axios({ url: ct.author.avatarURL(), responseType: "arraybuffer" })).data as Buffer;
+                } catch (e) {
+                    image1Path = await readFile("./assets/noavatar.png");
+                }
+
+                try {
+                    image2Path = (await axios({ url: user2nd.avatarURL(), responseType: "arraybuffer" })).data as Buffer;
+                } catch (e) {
+                    image2Path = await readFile("./assets/noavatar.png");
+                }
 
                 const image1 = await sharp(image1Path).resize(200, 200).toBuffer();
                 const image2 = await sharp(image2Path).resize(200, 200).toBuffer();
