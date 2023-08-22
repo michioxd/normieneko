@@ -106,7 +106,7 @@ const evt = {
 
                 //@ts-ignore
                 channel.send({
-                    content: `# <@!${ct.author.id}> :heart: ${randomPercent}% :heart: <@!${user2nd.id}>\n*${randomPercent === 100
+                    content: `## <@!${ct.author.id}> :heart: ${randomPercent}% :heart: <@!${user2nd.id}>\n*${randomPercent === 100
                         ? "ĐITME YÊU VÃI LỒN LUÔN ĐÓ, CHÚNG TA LÀ CỦA NHAU"
                         : randomPercent >= 90
                             ? "Em biết tại sao một tuần lại bắt đầu từ thứ hai không😳 tại vì em luôn là thứ nhất🥰"
