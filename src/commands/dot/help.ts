@@ -1,10 +1,6 @@
 import { EmbedBuilder, Events, Message } from "discord.js";
-import { readFile } from "node:fs/promises";
-import axios from 'axios';
 
-import botHandle, { globalPrefix } from "../../index.js";
-import log from "../../utils/logger.js";
-import client from "../../client.js";
+import { globalPrefix } from "../../index.js";
 import { emotion } from "./emotion.js";
 
 const evt = {
@@ -20,7 +16,7 @@ const evt = {
 
         if (msg[0] === "help" || msg[0] === "deobietdung" || msg[0] === "cuu" || msg[0] === "cuunan" || msg[0] === "dungnhunao") {
 
-            let emotionList = "";
+            let emotionList = "`love`, ";
             emotion.map(d => {
                 emotionList += "`" + d.name + "`, ";
             });

@@ -51,7 +51,19 @@ export const emotion: EmotionType[] = [
         name: "kill",
         text: "[[FROM]] đã ~~giết~~ [[TO]]",
         image: [
-            "https://cdn.discordapp.com/attachments/1131254507918082280/1143121945278283856/1.gif"
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143121945278283856/1.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143153290184511540/10A5211F-83AD-4166-A5DA-8AF3F533ADFD.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143153290612310147/6C1C97C0-7AC6-42F3-B266-341B3F757EEC.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143153291027554365/43416FAD-8F66-4E4D-A396-9FEDB7D490E8.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143153291505717278/34AFE5B8-120E-45BD-9CE3-521F92A6BCF9.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143153291866406942/5A452C80-6B72-4FA5-826B-46BABA9E0075.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143153292231315526/12A55C59-3C1B-4C30-B306-044E543EFA4F.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143158067773571083/CD09ACE3-C693-4747-A5F6-6D5301915480.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143158068142690384/DE73C54F-23D6-4547-AEDB-4A9EF706EDC1.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143158068591476767/2DE5A7EA-6F4B-4501-8260-7E72496C0F9F.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143158068968947723/6B11BF33-11DE-4243-AFF6-BBB651F51DEA.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143158069518422016/3CE1043D-AF0D-44F3-9FA4-55BE7BDF58B3.gif",
+            ""
         ],
         color: "#de1b1b"
     },
@@ -141,7 +153,8 @@ export const emotion: EmotionType[] = [
             "https://cdn.discordapp.com/attachments/1131254507918082280/1143124642744250398/10.gif",
             "https://cdn.discordapp.com/attachments/1131254507918082280/1143125320778657863/11.gif",
             "https://cdn.discordapp.com/attachments/1131254507918082280/1143125321386840124/12.gif",
-            "https://cdn.discordapp.com/attachments/1131254507918082280/1143125321936285826/13.gif"
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143125321936285826/13.gif",
+            "https://cdn.discordapp.com/attachments/1131254507918082280/1143160525342113863/9009A464-C42E-41B2-B9D8-936374F2D2AF.gif"
         ],
         color: "#1bde25"
     },
@@ -158,7 +171,7 @@ const evt = {
 
         const msg = ct.content.slice(1, ct.content.length).split(" ");
 
-        const pos = emotion.findIndex(e => e.name === msg[0]);
+        const pos = emotion.findIndex(e => e.name === msg[0].toLowerCase());
 
         if (pos > -1) {
 
