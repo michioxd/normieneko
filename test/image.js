@@ -10,8 +10,24 @@ const outputPath = 'output_image.png';
 
 
 try {
-    const image1 = await sharp(image1Path).resize(200, 200).toBuffer();
-    const image2 = await sharp(image2Path).resize(200, 200).toBuffer();
+    const image1 = await sharp(image1Path)
+        .composite([{
+            input: Buffer.from(
+                '<svg><rect x="0" y="0" width="200" height="200" rx="50" ry="50"/></svg>'
+            ),
+            blend: 'dest-in'
+        }])
+        .resize(200, 200)
+        .toBuffer();
+    const image2 = await sharp(image2Path)
+        .composite([{
+            input: Buffer.from(
+                '<svg><rect x="0" y="0" width="200" height="200" rx="50" ry="50"/></svg>'
+            ),
+            blend: 'dest-in'
+        }])
+        .resize(200, 200)
+        .toBuffer();
 
     const heart = await sharp("./assets/heart.png")
         .composite([
@@ -43,11 +59,9 @@ try {
         {
             input: Buffer.from(
                 `<svg width="200" height="50">
-
-                <text x="50.5%" y="50.5%" font-size="14" fill="#FFFFFFCC" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">firstUserName</text>
-                <text x="50%" y="50%" font-size="14" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">firstUserName</text>
-                
-                </svg>`
+                            <text x="50.3%" y="50.3%" font-size="14" fill="#FFF" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">firstUserName</text>
+                            <text x="50%" y="50%" font-size="14" fill="#57FF70" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">firstUserName</text>
+                            </svg>`
             ),
             left: 0,
             top: 200
@@ -55,19 +69,23 @@ try {
         {
             input: Buffer.from(
                 `<svg width="200" height="50">
-                <text x="51%" y="51%" font-size="18" fill="#FFFFFFCC" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
-                <text x="50%" y="50%" font-size="18" fill="#57FF70" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
+                            <text x="50.5%" y="50.5%" font-size="20" fill="#FFF" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
+                            <text x="50%" y="50%" font-size="20" fill="#57FF70" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
 
-                <text x="51%" y="71%" font-size="18" fill="#FFFFFFCC" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">powered by michioxd</text>
-                <text x="50%" y="70%" font-size="18" fill="#57FF70" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
-                </svg>`
+                            <text x="50.5%" y="80.5%" font-size="14" fill="#FFF" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">discord.gg/aoanhxanh</text>
+                            <text x="50%" y="80%" font-size="14" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">discord.gg/aoanhxanh</text>
+
+                            </svg>`
             ),
             left: 200,
-            top: 200
+            top: 180
         },
         {
             input: Buffer.from(
-                `<svg width="200" height="50"><text x="50%" y="50%" font-size="14" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">secondUserName</text></svg>`
+                `<svg width="200" height="50">
+                            <text x="50.3%" y="50.3%" font-size="14" fill="#FFF" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">secondUserName</text>
+                            <text x="50%" y="50%" font-size="14" fill="#57FF70" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">secondUserName</text>
+                            </svg>`
             ),
             left: 400,
             top: 200

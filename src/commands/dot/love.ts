@@ -33,9 +33,7 @@ const evt = {
 
             const userId = msg[1].match(/<@!?(\d+)>/)[1];
 
-            const randomPercent = Math.floor(Math.random() * 100) + 1;
-
-
+            const randomPercent = Math.floor(Math.random() * 101);
 
             try {
                 const user2nd = await client.users.fetch(userId);
@@ -54,8 +52,24 @@ const evt = {
                     image2Path = await readFile("./assets/noavatar.png");
                 }
 
-                const image1 = await sharp(image1Path).resize(200, 200).toBuffer();
-                const image2 = await sharp(image2Path).resize(200, 200).toBuffer();
+                const image1 = await sharp(image1Path)
+                    .composite([{
+                        input: Buffer.from(
+                            '<svg><rect x="0" y="0" width="200" height="200" rx="50" ry="50"/></svg>'
+                        ),
+                        blend: 'dest-in'
+                    }])
+                    .resize(200, 200)
+                    .toBuffer();
+                const image2 = await sharp(image2Path)
+                    .composite([{
+                        input: Buffer.from(
+                            '<svg><rect x="0" y="0" width="200" height="200" rx="50" ry="50"/></svg>'
+                        ),
+                        blend: 'dest-in'
+                    }])
+                    .resize(200, 200)
+                    .toBuffer();
 
                 const heart = await sharp("./assets/heart.png")
                     .composite([
@@ -87,7 +101,7 @@ const evt = {
                     {
                         input: Buffer.from(
                             `<svg width="200" height="50">
-                            <text x="50.5%" y="50.5%" font-size="14" fill="#FFF" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">${ct.author.displayName}</text>
+                            <text x="50.4%" y="50.4%" font-size="14" fill="#FFF" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">${ct.author.displayName}</text>
                             <text x="50%" y="50%" font-size="14" fill="#57FF70" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">${ct.author.displayName}</text>
                             </svg>`
                         ),
@@ -99,15 +113,19 @@ const evt = {
                             `<svg width="200" height="50">
                             <text x="50.5%" y="50.5%" font-size="20" fill="#FFF" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
                             <text x="50%" y="50%" font-size="20" fill="#57FF70" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
+
+                            <text x="50.5%" y="80.5%" font-size="14" fill="#FFF" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">discord.gg/aoanhxanh</text>
+                            <text x="50%" y="80%" font-size="14" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">discord.gg/aoanhxanh</text>
+
                             </svg>`
                         ),
                         left: 200,
-                        top: 200
+                        top: 180
                     },
                     {
                         input: Buffer.from(
                             `<svg width="200" height="50">
-                            <text x="50.5%" y="50.5%" font-size="14" fill="#FFF" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">${user2nd.displayName}</text>
+                            <text x="50.4%" y="50.4%" font-size="14" fill="#FFF" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">${user2nd.displayName}</text>
                             <text x="50%" y="50%" font-size="14" fill="#57FF70" font-weight="bold" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">${user2nd.displayName}</text>
                             </svg>`
                         ),
