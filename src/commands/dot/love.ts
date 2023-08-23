@@ -36,6 +36,11 @@ const evt = {
             const randomPercent = Math.floor(Math.random() * 101);
 
             try {
+                const channel = client.channels.cache.get(ct.channelId);
+
+                //@ts-ignore
+                channel.sendTyping();
+
                 const user2nd = await client.users.fetch(userId);
 
                 let image1Path: sharp.SharpOptions | Buffer, image2Path: sharp.SharpOptions | Buffer;
@@ -133,8 +138,6 @@ const evt = {
                         top: 200
                     }
                 ]).toFormat('png').toBuffer();
-
-                const channel = client.channels.cache.get(ct.channelId);
 
                 //@ts-ignore
                 channel.send({
