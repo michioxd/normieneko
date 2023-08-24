@@ -63,7 +63,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 5500);
+            }), 600);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -73,7 +73,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 6000);
+            }), 7000);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -83,7 +83,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 6500);
+            }), 8000);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -93,19 +93,8 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 7000);
-            setTimeout(() => client.user.setPresence({
-                status: "online",
-                activities: [
-                    {
-                        name: `${fullMember} thành viên`,
-                        type: ActivityType.Watching,
-                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                    }
-                ]
-            }), 7500);
+            }), 9000);
             setTimeout(fetchMemCount, 10000);
-
         } catch (err) {
             log({ type: 3, message: "Cannot get guild members!" });
             //console.log("[ERROR] Cannot get guild members: " + err);
