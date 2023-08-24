@@ -48,52 +48,12 @@ client.once(Events.ClientReady, async c => {
                 status: "online",
                 activities: [
                     {
-                        name: `Never`,
-                        type: ActivityType.Watching,
-                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                    }
-                ]
-            }), 5000);
-            setTimeout(() => client.user.setPresence({
-                status: "online",
-                activities: [
-                    {
-                        name: `Gonna`,
-                        type: ActivityType.Watching,
-                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                    }
-                ]
-            }), 600);
-            setTimeout(() => client.user.setPresence({
-                status: "online",
-                activities: [
-                    {
-                        name: `Give`,
-                        type: ActivityType.Watching,
-                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                    }
-                ]
-            }), 7000);
-            setTimeout(() => client.user.setPresence({
-                status: "online",
-                activities: [
-                    {
-                        name: `You`,
+                        name: `ecchi nii-san nya~`,
                         type: ActivityType.Watching,
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
             }), 8000);
-            setTimeout(() => client.user.setPresence({
-                status: "online",
-                activities: [
-                    {
-                        name: `Up`,
-                        type: ActivityType.Watching,
-                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                    }
-                ]
-            }), 9000);
             setTimeout(fetchMemCount, 10000);
         } catch (err) {
             log({ type: 3, message: "Cannot get guild members!" });
