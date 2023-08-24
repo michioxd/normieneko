@@ -1,4 +1,5 @@
 import { EmbedBuilder, Events, Message } from "discord.js";
+import { setTimeout as wait } from 'node:timers/promises';
 import { readFile } from 'node:fs/promises';
 
 import { globalPrefix } from "../../index.js";
@@ -22,7 +23,10 @@ const evt = {
         if (msg[0].toLowerCase() === "love") {
 
             if (!msg[1]) {
-                ct.reply("***Lỗi:** Vui lòng tag 1 ai đó vào đây!*");
+                await ct.reply("***Lỗi:** Vui lòng tag 1 ai đó vào đây!*");
+                await wait(5000);
+
+                await ct.delete();
                 return;
             }
 
@@ -32,7 +36,11 @@ const evt = {
             }
 
             if (!msg[1].match(/<@!?(\d+)>/) && Number.isNaN(parseInt(msg[1]))) {
-                ct.reply("***Lỗi:** Người dùng được tag không đúng định dạng!*");
+                await ct.reply("***Lỗi:** Người dùng được tag không đúng định dạng!*");
+
+                await wait(5000);
+
+                await ct.delete();
                 return;
             }
 
