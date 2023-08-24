@@ -53,7 +53,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 4500);
+            }), 5000);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -63,7 +63,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 5000);
+            }), 5500);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -73,7 +73,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 5500);
+            }), 6000);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -83,7 +83,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 6000);
+            }), 6500);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -93,7 +93,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 6500);
+            }), 7000);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -103,13 +103,13 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 7000);
+            }), 7500);
 
         } catch (err) {
             log({ type: 3, message: "Cannot get guild members!" });
             //console.log("[ERROR] Cannot get guild members: " + err);
         }
-        setTimeout(fetchMemCount, 8000);
+        setTimeout(fetchMemCount, 10000);
     }
 
 
