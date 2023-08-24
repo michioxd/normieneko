@@ -26,12 +26,19 @@ const evt = {
                 return;
             }
 
-            if (!msg[1].match(/<@!?(\d+)>/)) {
+            if (msg[1] === "help") {
+                ct.reply(`# \`love\`\n**Cách dùng: ** \`;love <tag ai đó vào hoặc id>\`\nThêm \`s\` (**s**ilent) ở cuối để không làm phiền người khác`);
+                return;
+            }
+
+            if (!msg[1].match(/<@!?(\d+)>/) && Number.isNaN(parseInt(msg[1]))) {
                 ct.reply("***Lỗi:** Người dùng được tag không đúng định dạng!*");
                 return;
             }
 
-            const userId = msg[1].match(/<@!?(\d+)>/)[1];
+
+
+            const userId = !Number.isNaN(parseInt(msg[1])) ? msg[1] : msg[1].match(/<@!?(\d+)>/)[1];
 
             const randomPercent = Math.floor(Math.random() * 101);
 
@@ -139,9 +146,11 @@ const evt = {
                     }
                 ]).toFormat('png').toBuffer();
 
+
+
                 //@ts-ignore
                 channel.send({
-                    content: `## <@!${ct.author.id}> :heart: ${randomPercent}% :heart: <@!${user2nd.id}>\n*${randomPercent === 100
+                    content: `## ${msg[2] === "s" ? `${ct.author.displayName}` : `<@!${ct.author.id}>`} :heart: ${randomPercent}% :heart: ${msg[2] === "s" ? `${user2nd.displayName}` : `<@!${user2nd.id}>`}\n*${randomPercent === 100
                         ? "ĐITME YÊU VÃI LỒN LUÔN ĐÓ, CHÚNG TA LÀ CỦA NHAU"
                         : randomPercent >= 90
                             ? "Em biết tại sao một tuần lại bắt đầu từ thứ hai không😳 tại vì em luôn là thứ nhất🥰"
