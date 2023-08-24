@@ -53,7 +53,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 5000);
+            }), 4500);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -63,7 +63,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 5500);
+            }), 5000);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -73,7 +73,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 6000);
+            }), 5500);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -83,7 +83,7 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 6500);
+            }), 6000);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
@@ -93,17 +93,17 @@ client.once(Events.ClientReady, async c => {
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 7000);
+            }), 6500);
             setTimeout(() => client.user.setPresence({
                 status: "online",
                 activities: [
                     {
-                        name: `Never gonna give you up`,
+                        name: `${fullMember} thành viên`,
                         type: ActivityType.Watching,
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 7500);
+            }), 7000);
 
         } catch (err) {
             log({ type: 3, message: "Cannot get guild members!" });
