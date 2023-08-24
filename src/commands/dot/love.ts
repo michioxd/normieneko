@@ -23,10 +23,10 @@ const evt = {
         if (msg[0].toLowerCase() === "love") {
 
             if (!msg[1]) {
-                await ct.reply("***Lỗi:** Vui lòng tag 1 ai đó vào đây!*");
+                const rep = await ct.reply("***Lỗi:** Vui lòng tag 1 ai đó vào đây!*");
                 await wait(5000);
 
-                await ct.delete();
+                await rep.delete();
                 return;
             }
 
@@ -36,11 +36,11 @@ const evt = {
             }
 
             if (!msg[1].match(/<@!?(\d+)>/) && Number.isNaN(parseInt(msg[1]))) {
-                await ct.reply("***Lỗi:** Người dùng được tag không đúng định dạng!*");
+                const rep = await ct.reply("***Lỗi:** Người dùng được tag không đúng định dạng!*");
 
                 await wait(5000);
 
-                await ct.delete();
+                await rep.delete();
                 return;
             }
 
