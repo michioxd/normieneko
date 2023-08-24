@@ -48,12 +48,62 @@ client.once(Events.ClientReady, async c => {
                 status: "online",
                 activities: [
                     {
-                        name: `discord.gg/aoanhxanh`,
+                        name: `Never`,
                         type: ActivityType.Watching,
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
                 ]
-            }), 4000);
+            }), 5000);
+            setTimeout(() => client.user.setPresence({
+                status: "online",
+                activities: [
+                    {
+                        name: `Gonna`,
+                        type: ActivityType.Watching,
+                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    }
+                ]
+            }), 5500);
+            setTimeout(() => client.user.setPresence({
+                status: "online",
+                activities: [
+                    {
+                        name: `Give`,
+                        type: ActivityType.Watching,
+                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    }
+                ]
+            }), 6000);
+            setTimeout(() => client.user.setPresence({
+                status: "online",
+                activities: [
+                    {
+                        name: `You`,
+                        type: ActivityType.Watching,
+                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    }
+                ]
+            }), 6500);
+            setTimeout(() => client.user.setPresence({
+                status: "online",
+                activities: [
+                    {
+                        name: `Up`,
+                        type: ActivityType.Watching,
+                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    }
+                ]
+            }), 7000);
+            setTimeout(() => client.user.setPresence({
+                status: "online",
+                activities: [
+                    {
+                        name: `Never gonna give you up`,
+                        type: ActivityType.Watching,
+                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    }
+                ]
+            }), 7500);
 
         } catch (err) {
             log({ type: 3, message: "Cannot get guild members!" });
