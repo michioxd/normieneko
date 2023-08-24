@@ -30,32 +30,38 @@ client.once(Events.ClientReady, c => {
 client.once(Events.ClientReady, async c => {
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
-    let lastSize = 0;
     const fetchMemCount = async () => {
         try {
             const memberCount = await guild.members.fetch();
             const fullMember = memberCount.filter(member => !member.user.bot).size;
-
-            if (fullMember !== lastSize) {
-                lastSize = fullMember;
-                client.user.setPresence({
-                    status: "online",
-                    activities: [
-                        {
-                            name: `${fullMember} thành viên`,
-                            type: ActivityType.Watching,
-                            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                        }
-                    ]
-                });
-            }
+            client.user.setPresence({
+                status: "online",
+                activities: [
+                    {
+                        name: `${fullMember} thành viên`,
+                        type: ActivityType.Watching,
+                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    }
+                ]
+            });
 
         } catch (err) {
             log({ type: 3, message: "Cannot get guild members!" });
             //console.log("[ERROR] Cannot get guild members: " + err);
         }
-        setTimeout(fetchMemCount, 5000);
+        setTimeout(fetchMemCount, 8000);
     }
+
+    setInterval(() => client.user.setPresence({
+        status: "online",
+        activities: [
+            {
+                name: `discord.gg/aoanhxanh`,
+                type: ActivityType.Watching,
+                url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            }
+        ]
+    }), 4000);
 
     fetchMemCount();
 });
