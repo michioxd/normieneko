@@ -104,12 +104,13 @@ client.once(Events.ClientReady, async c => {
                     }
                 ]
             }), 7500);
+            setTimeout(fetchMemCount, 10000);
 
         } catch (err) {
             log({ type: 3, message: "Cannot get guild members!" });
             //console.log("[ERROR] Cannot get guild members: " + err);
+            setTimeout(fetchMemCount, 10000);
         }
-        setTimeout(fetchMemCount, 10000);
     }
 
 
