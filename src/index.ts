@@ -44,6 +44,16 @@ client.once(Events.ClientReady, async c => {
                     }
                 ]
             });
+            setTimeout(() => client.user.setPresence({
+                status: "online",
+                activities: [
+                    {
+                        name: `discord.gg/aoanhxanh`,
+                        type: ActivityType.Watching,
+                        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    }
+                ]
+            }), 4000);
 
         } catch (err) {
             log({ type: 3, message: "Cannot get guild members!" });
@@ -52,16 +62,7 @@ client.once(Events.ClientReady, async c => {
         setTimeout(fetchMemCount, 8000);
     }
 
-    setInterval(() => client.user.setPresence({
-        status: "online",
-        activities: [
-            {
-                name: `discord.gg/aoanhxanh`,
-                type: ActivityType.Watching,
-                url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            }
-        ]
-    }), 4000);
+
 
     fetchMemCount();
 });
