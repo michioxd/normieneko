@@ -6,6 +6,7 @@ import simbot from './events/simbot.js';
 import emotion from './commands/dot/emotion.js';
 import help from './commands/dot/help.js';
 import love from './commands/dot/love.js';
+import taixiu from './commands/dot/taixiu.js';
 
 const eventLists: EventType[] = [
     welcome,
@@ -13,7 +14,8 @@ const eventLists: EventType[] = [
     simbot,
     emotion,
     help,
-    love
+    love,
+    taixiu
 ];
 
-export default eventLists
+export default eventLists;

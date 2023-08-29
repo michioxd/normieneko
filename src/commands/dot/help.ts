@@ -31,6 +31,9 @@ Thuộc Viện Hàng Lâm Khoa Học **Ảo Ảnh Xanh**
 ${emotionList}
 *Cách dùng: \`;<lệnh> <tag đối tượng vào đây>\`*
 
+**Cờ bạc trái phép: **
+\`taixiu\`
+
 **Lệnh khác: **
 \`/sinhnhat <ngày> <tháng> <năm>\`: Thiết lập ngày sinh trên server Ảo Ảnh Xanh, sẽ có cái gì đấy đặc biệt khi đến ngày đó :)) [UNSTABLE/PREVIEW]
 
