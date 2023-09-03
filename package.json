@@ -6,15 +6,18 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specifie\" && exit 1",
     "start": "tsc && node dist/deployCommand.js && node dist/index.js",
     "host": "git pull && pm2 stop all && tsc && node dist/deployCommand.js && pm2 start dist/index.js",
-    "build": "tsc"
+    "register": "node dist/deployCommand.js",
+    "build": "tsc",
+    "build-fly": "tsc --outDir /app"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.8",
     "typescript": "^5.1.6"
   },
   "dependencies": {
