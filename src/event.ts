@@ -7,6 +7,7 @@ import emotion from './commands/dot/emotion.js';
 import help from './commands/dot/help.js';
 import love from './commands/dot/love.js';
 import taixiu from './commands/dot/taixiu.js';
+import farewell from './commands/dot/farewell.js';
 
 const eventLists: EventType[] = [
     welcome,
@@ -15,7 +16,8 @@ const eventLists: EventType[] = [
     emotion,
     help,
     love,
-    taixiu
+    taixiu,
+    farewell
 ];
 
 export default eventLists;
