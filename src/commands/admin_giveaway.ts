@@ -3,6 +3,7 @@ import client from "../client.js";
 import { Giveaway, GiveawayJoined } from "../db.js";
 import log from "../utils/logger.js";
 import { Sequelize } from "sequelize";
+import crypto from "crypto";
 
 const command = {
     data: new SlashCommandBuilder()
