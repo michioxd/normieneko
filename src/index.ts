@@ -14,6 +14,7 @@ import db from './db.js';
 dotenv.config();
 
 export const globalPrefix = ";";
+export const serverId = "1126875840936955934";
 
 try {
     await db.authenticate();

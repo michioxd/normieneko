@@ -16,8 +16,7 @@ const eventLists: EventType[] = [
     emotion,
     help,
     love,
-    taixiu,
-    farewell
+    taixiu
 ];
 
 export default eventLists;
