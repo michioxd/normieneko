@@ -112,30 +112,30 @@ const command = {
                                             const checkCurrentLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
                                             if (checkCurrentLen >= joiners && joiners > 0) {
                                                 client.users.cache.get(cfm.user.id).send("❌ Đã quá lượt tham gia Giveaway!");
-                                                return;
+                                            } else {
+                                                await GiveawayJoined.create({
+                                                    uid: cfm.user.id,
+                                                    joinedAt: Date.now(),
+                                                    gaUuid: guid,
+                                                    uuid: crypto.randomUUID()
+                                                });
+
+                                                const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
+                                                const updateEmbed = new EmbedBuilder()
+                                                    .setTitle(content)
+                                                    .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+                                                    .setColor("#44ff00")
+                                                    .setFooter({
+                                                        text: "Ảo Ảnh Xanh Giveaway",
+                                                        iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                                    })
+                                                    .setTimestamp();
+
+                                                cfm.update({
+                                                    embeds: [updateEmbed]
+                                                });
+                                                client.users.cache.get(cfm.user.id).send("✅ Bạn đã tham gia Giveaway **" + content + "** của ngày " + (new Date(expired).toLocaleString('vi-VN')));
                                             }
-                                            await GiveawayJoined.create({
-                                                uid: cfm.user.id,
-                                                joinedAt: Date.now(),
-                                                gaUuid: guid,
-                                                uuid: crypto.randomUUID()
-                                            });
-
-                                            const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
-                                            const updateEmbed = new EmbedBuilder()
-                                                .setTitle(content)
-                                                .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
-                                                .setColor("#44ff00")
-                                                .setFooter({
-                                                    text: "Ảo Ảnh Xanh Giveaway",
-                                                    iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
-                                                })
-                                                .setTimestamp();
-
-                                            cfm.update({
-                                                embeds: [updateEmbed]
-                                            });
-                                            client.users.cache.get(cfm.user.id).send("✅ Bạn đã tham gia Giveaway **" + content + "** của ngày " + (new Date(expired).toLocaleString('vi-VN')));
                                         } else {
                                             await GiveawayJoined.destroy({
                                                 where: { gaUuid: guid, uid: cfm.user.id }
