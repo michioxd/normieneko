@@ -180,7 +180,7 @@ const command = {
                             try {
                                 const GA_Join = await GiveawayJoined.findAll({ order: Sequelize.literal('RANDOM()'), limit: winners, where: { gaUuid: guid } });
                                 const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
-                                let resultGA = "", resultGACong;
+                                let resultGA = "";
                                 GA_Join.map((d, i) => {
                                     client.users.cache.get(d.uid).send("## 🎉 Chúc mừng bạn đã trúng Giveaway **" + content + "** của ngày " + (new Date(expired).toLocaleString('vi-VN')) + "\n### Bạn vui lòng hãy liên hệ tới Owner của server **Ảo Ảnh Xanh** để nhận giải!!!\nUUID Xác nhận tham gia: `" + d.uuid + "`");
                                     resultGA += ((i + 1) + ". <@!" + d.uid + ">\n");
