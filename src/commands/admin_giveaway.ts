@@ -110,7 +110,7 @@ const command = {
                                         const GA_Join = await GiveawayJoined.findOne({ where: { gaUuid: guid, uid: cfm.user.id } });
                                         if (GA_Join === null) {
                                             const checkCurrentLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
-                                            if (checkCurrentLen > joiners) {
+                                            if (checkCurrentLen >= joiners && joiners > 0) {
                                                 client.users.cache.get(cfm.user.id).send("❌ Đã quá lượt tham gia Giveaway!");
                                                 return;
                                             }
