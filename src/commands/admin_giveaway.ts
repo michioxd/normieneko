@@ -20,7 +20,7 @@ const command = {
                 .setRequired(true))
         .addIntegerOption(option =>
             option.setName('count')
-                .setDescription('Số người tham gia, 0 = không giới hạn')
+                .setDescription('Số người có thể tham gia, 0 = không giới hạn')
                 .setMinValue(0)
                 .setRequired(true))
         .addIntegerOption(option =>
@@ -28,6 +28,8 @@ const command = {
                 .setDescription('Số người được giải, >= 1')
                 .setMinValue(1)
                 .setRequired(true))
+        .addBooleanOption(option => option.setName("ping_ga").setRequired(true)
+            .setDescription("Ping role Ping GA"))
         .addStringOption(option =>
             option.setName("channel")
                 .setChoices({
@@ -52,7 +54,7 @@ const command = {
 
         const embed = new EmbedBuilder()
             .setTitle(content)
-            .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: 0\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+            .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: 0\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
             .setColor("#44ff00")
             .setFooter({
                 text: "Ảo Ảnh Xanh Giveaway",
@@ -81,9 +83,12 @@ const command = {
                 maxUser: joiners,
                 done: 0
             });
+            if (interaction.options.getBoolean('ping_ga')) {
+                //@ts-ignore
+                await channel.send("<@&1134094996912476285>");
+            }
             //@ts-ignore
             const response = await channel.send({
-                message: "<@&1134094996912476285>",
                 embeds: [embed],
                 components: [row],
             });
@@ -98,7 +103,6 @@ const command = {
                     const GA = await Giveaway.findOne({ where: { uuid: guid } });
                     if (GA !== null) {
                         if (GA.expired - Date.now() > 0) {
-
                             try {
                                 const cfm = await response.awaitMessageComponent({ time: 3000 });
                                 if (cfm.customId === 'confirmGA') {
@@ -115,7 +119,7 @@ const command = {
                                             const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
                                             const updateEmbed = new EmbedBuilder()
                                                 .setTitle(content)
-                                                .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+                                                .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
                                                 .setColor("#44ff00")
                                                 .setFooter({
                                                     text: "Ảo Ảnh Xanh Giveaway",
@@ -134,7 +138,7 @@ const command = {
                                             const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
                                             const updateEmbed = new EmbedBuilder()
                                                 .setTitle(content)
-                                                .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+                                                .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
                                                 .setColor("#44ff00")
                                                 .setFooter({
                                                     text: "Ảo Ảnh Xanh Giveaway",
@@ -159,7 +163,7 @@ const command = {
                                     const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
                                     const updateEmbed = new EmbedBuilder()
                                         .setTitle(content)
-                                        .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+                                        .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
                                         .setColor("#44ff00")
                                         .setFooter({
                                             text: "Ảo Ảnh Xanh Giveaway",
@@ -176,19 +180,19 @@ const command = {
                             try {
                                 const GA_Join = await GiveawayJoined.findAll({ order: Sequelize.literal('RANDOM()'), limit: winners, where: { gaUuid: guid } });
                                 const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
-                                let resultGA = "";
-                                GA_Join.map((d) => {
-                                    client.users.cache.get(d.uid).send("🎉 Chúc mừng bạn đã trúng Giveaway **" + content + "** của ngày " + (new Date(expired).toLocaleString('vi-VN')) + ", bạn vui lòng hãy liên hệ tới Owner của server **Ảo Ảnh Xanh** để nhận giải!!!\nUUID Xác nhận: `" + d.uuid + "`");
-                                    resultGA += ("<@!" + d.uid + "> ");
+                                let resultGA = "", resultGACong;
+                                GA_Join.map((d, i) => {
+                                    client.users.cache.get(d.uid).send("## 🎉 Chúc mừng bạn đã trúng Giveaway **" + content + "** của ngày " + (new Date(expired).toLocaleString('vi-VN')) + "\n### Bạn vui lòng hãy liên hệ tới Owner của server **Ảo Ảnh Xanh** để nhận giải!!!\nUUID Xác nhận tham gia: `" + d.uuid + "`");
+                                    resultGA += ((i + 1) + ". <@!" + d.uid + ">\n");
                                 });
                                 await Giveaway.update({ done: 1 }, { where: { uuid: guid } });
 
                                 const ResultEmbed = new EmbedBuilder()
-                                    .setTitle(content)
-                                    .setDescription(`**Người trúng Giveaway**:\n${resultGA ? resultGA : "*Không có ai trúng Giveaway :(*"}\n\n**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}`)
+                                    .setTitle("[ĐÃ KẾT THÚC] " + content)
+                                    .setDescription(`**🎉 Người trúng Giveaway**:\n${resultGA ? resultGA : "*Không có ai trúng Giveaway :(*"}\n*Những người thắng Giveaway xin vui lòng kiểm tra DMs của bot đã gửi tới bạn!*\n\n**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}`)
                                     .setColor("#44ff00")
                                     .setFooter({
-                                        text: "Ảo Ảnh Xanh Giveaway [ĐÃ KẾT THÚC]",
+                                        text: "Ảo Ảnh Xanh Giveaway",
                                         iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
                                     })
                                     .setTimestamp();
