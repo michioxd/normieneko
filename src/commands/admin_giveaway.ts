@@ -48,7 +48,7 @@ const command = {
         const currentTime = Date.now();
         const content = interaction.options.getString('content');
         const winners = interaction.options.getInteger('count_winners');
-        const joiners = interaction.options.getInteger('joiners');
+        const joiners = interaction.options.getInteger('count');
         const expireTime = interaction.options.getInteger('time');
         const expired = currentTime + expireTime * 1000;
 
