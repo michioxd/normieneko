@@ -10,6 +10,7 @@ import eventLists from './event.js';
 import client from './client.js';
 import log from './utils/logger.js';
 import db from './db.js';
+import PlayerDaemon from './commands/dot/music/player.daemon.js';
 
 dotenv.config();
 
@@ -20,11 +21,10 @@ try {
     await db.authenticate();
     log({ type: 1, message: `DB Ok`, noLogFile: true });
 } catch (error) {
-    log({ type: 3, message: 'Unable to connect to the database: ' + error, noLogFile: true });
+    log({ type: 3, message: 'Unable to connect to the database: ' + error, noLogFile: false });
 }
 
 client.once(Events.ClientReady, c => {
-    console.log();
     log({ type: 1, message: `Ready! Logged in as ${c.user.tag}`, noLogFile: true });
 });
 
@@ -62,9 +62,6 @@ client.once(Events.ClientReady, async c => {
             setTimeout(fetchMemCount, 10000);
         }
     }
-
-
-
     fetchMemCount();
 });
 

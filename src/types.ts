@@ -28,7 +28,7 @@ export interface GiveawayType extends Model<InferAttributes<GiveawayType>, Infer
     createdBy: string,
     expired: number,
     maxUser: number,
-    done: number
+    done: 0 | 1
 }
 
 export interface GiveawayJoinedType extends Model<InferAttributes<GiveawayJoinedType>, InferCreationAttributes<GiveawayJoinedType>> {
@@ -38,9 +38,22 @@ export interface GiveawayJoinedType extends Model<InferAttributes<GiveawayJoined
     uuid: string
 }
 
+export interface PlaylistType extends Model<InferAttributes<PlaylistType>, InferCreationAttributes<PlaylistType>> {
+    uid: string,
+    addedBy: string,
+    addedAt: number,
+    url: string,
+    played: 0 | 1,
+    title: string,
+    originalUrl: string,
+    streamingType: 0 | 1
+}
+
 export type EmotionType = {
     name: string,
     text: string,
     image: string[],
     color: ColorResolvable
 }
+
+

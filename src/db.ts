@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model, InferAttributes, InferCreationAttributes } from "sequelize";
-import { GiveawayJoinedType, GiveawayType, UserType } from "./types";
+import { GiveawayJoinedType, GiveawayType, PlaylistType, UserType } from "./types";
 import log from "./utils/logger.js";
 
 
@@ -32,10 +32,22 @@ const GiveawayJoined = db.define<GiveawayJoinedType>("giveaway_joined", {
     uuid: DataTypes.STRING
 });
 
+const Playlist = db.define<PlaylistType>("playlist", {
+    uid: DataTypes.STRING,
+    addedAt: DataTypes.NUMBER,
+    addedBy: DataTypes.STRING,
+    url: DataTypes.STRING,
+    played: DataTypes.NUMBER,
+    title: DataTypes.STRING,
+    originalUrl: DataTypes.STRING,
+    streamingType: DataTypes.NUMBER
+});
+
 try {
     await User.sync();
     await Giveaway.sync();
     await GiveawayJoined.sync();
+    await Playlist.sync();
 } catch (e) {
     log({
         type: 3,
@@ -45,4 +57,4 @@ try {
 
 export default db;
 
-export { User, Giveaway, GiveawayJoined };
+export { User, Giveaway, GiveawayJoined, Playlist };
