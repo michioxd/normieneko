@@ -50,7 +50,7 @@ const evt = {
                 if (isYouTubeWatchUrl(msg[1])) {
                     const rp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu, vui lòng chờ...*")
                     try {
-                        const res = await axios.get(`https://vid.puffyan.us/api/v1/videos/${getYouTubeVideoId(msg[1])}?hl=en-US`);
+                        const res = await axios.get(`https://vid.priv.au/api/v1/videos/${getYouTubeVideoId(msg[1])}?hl=en-US`);
                         if (res) {
                             const youtubeRes = res.data as YouTubeAPIType;
                             let streamingType = 0, playUrl = "";
