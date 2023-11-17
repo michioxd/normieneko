@@ -8,6 +8,7 @@ import { getYouTubeVideoId } from "../../../utils/utils.js";
 import client from "../../../client.js";
 import { serverId } from "../../../index.js";
 import got from "got";
+import { Readable } from "node:stream";
 
 export let CurrentVoiceChannelId: string = "";
 export let CurrentVoiceInstance: VoiceConnection | null = null;
@@ -19,9 +20,17 @@ export let CurrentPlayerInstance: AudioPlayer = createAudioPlayer();
 
 export let CurrentPlayingUUID = "";
 
-async function probeAndCreateResource(readableStream) {
-    const { stream, type } = await demuxProbe(readableStream);
-    return createAudioResource(stream, { inputType: type });
+async function probeAndCreateResource(readableStream, error?: () => void) {
+    let st: Readable | string = "./assets/error.webm", tp = StreamType.WebmOpus;
+    try {
+        const { stream, type } = await demuxProbe(readableStream);
+        st = stream;
+        tp = type;
+    } catch (e) {
+        error();
+    }
+
+    return createAudioResource(st, { inputType: tp });
 }
 
 export async function HandlePlayingSession(type?: number) {
@@ -58,14 +67,18 @@ export async function HandlePlayingSession(type?: number) {
 
             try {
                 CurrentPlayingUUID = track.uid;
-                // const rs = await probeAndCreateResource(got.stream(track.url, {
-                //     headers: {
-                //         "user-agent": "Mozilla/ 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 119.0.0.0 Safari / 537.36",
-                //         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                //         "Sec-Ch-Ua-Platform": "Windows"
-                //     }
-                // }));
-                const rs = createAudioResource(track.url);
+                const rs = await probeAndCreateResource(got.stream(track.url, {
+                    headers: {
+                        "user-agent": "Mozilla/ 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 119.0.0.0 Safari / 537.36",
+                        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                        "Sec-Ch-Ua-Platform": "Windows"
+                    }
+                }), () => {
+                    //@ts-ignore
+                    await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
+                    HandlePlayingSession(3);
+                });
+                // const rs = createAudioResource(track.url);
                 CurrentPlayerInstance.play(rs);
             } catch (e) {
                 //@ts-ignore
