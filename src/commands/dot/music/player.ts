@@ -9,7 +9,6 @@ import client from "../../../client.js";
 import { serverId } from "../../../index.js";
 import got from "got";
 import { Readable } from "node:stream";
-import pReflect from "p-reflect";
 
 export let CurrentVoiceChannelId: string = "";
 export let CurrentVoiceInstance: VoiceConnection | null = null;
@@ -74,7 +73,7 @@ export async function HandlePlayingSession(type?: number) {
                         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
                         "Sec-Ch-Ua-Platform": "Windows"
                     },
-                    retry: 5
+                    retry: 1
                 }), async function () {
                     //@ts-ignore
                     await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
