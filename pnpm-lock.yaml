@@ -32,6 +32,9 @@ dependencies:
   libsodium-wrappers:
     specifier: ^0.7.13
     version: 0.7.13
+  p-reflect:
+    specifier: ^3.1.0
+    version: 3.1.0
   pm2:
     specifier: ^5.3.0
     version: 5.3.0
@@ -1921,6 +1924,11 @@ packages:
       aggregate-error: 3.1.0
     dev: false
     optional: true
+
+  /p-reflect@3.1.0:
+    resolution: {integrity: sha512-3sG3UlpisPSaX+o7u2q01hIQmrpkvdl5GSO1ZwL7pfc5kHB2bPF0eFNCfYTrW1/LTUdgmPwBAvmT0Zr8eSmaAQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /pac-proxy-agent@7.0.1:
     resolution: {integrity: sha512-ASV8yU4LLKBAjqIPMbrgtaKIvxQri/yh2OpI+S6hVa9JRkUI3Y3NPFbfngDtY7oFtSMD3w31Xns89mDa3Feo5A==}
