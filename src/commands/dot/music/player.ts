@@ -75,9 +75,6 @@ export async function HandlePlayingSession(type?: number) {
                     },
                     minVersion: "TLSv1.2",
 
-                    //@ts-ignore
-                    http2: true
-
                 }), async function () {
                     //@ts-ignore
                     await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
@@ -89,6 +86,7 @@ export async function HandlePlayingSession(type?: number) {
                 // });
                 CurrentPlayerInstance.play(rs);
             } catch (e) {
+                console.log(e);
                 //@ts-ignore
                 await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
                 HandlePlayingSession(3);
