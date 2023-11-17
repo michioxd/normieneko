@@ -73,7 +73,9 @@ export async function HandlePlayingSession(type?: number) {
                         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
                         "Sec-Ch-Ua-Platform": "Windows"
                     },
-                    minVersion: "TLSv1.2",
+
+                    //@ts-ignore
+                    http2: true
 
                 }), async function () {
                     //@ts-ignore
