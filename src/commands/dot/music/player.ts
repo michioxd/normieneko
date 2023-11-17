@@ -78,7 +78,10 @@ export async function HandlePlayingSession(type?: number) {
                 //     await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
                 //     HandlePlayingSession(3);
                 // });
-                const rs = createAudioResource(track.url);
+                const rs = createAudioResource(track.url, {
+                    inlineVolume: true,
+                    inputType: track.streamingType === 1 ? StreamType.WebmOpus : StreamType.Arbitrary
+                });
                 CurrentPlayerInstance.play(rs);
             } catch (e) {
                 //@ts-ignore
