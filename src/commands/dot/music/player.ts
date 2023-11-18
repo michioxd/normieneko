@@ -1,14 +1,9 @@
-import { AudioPlayer, AudioPlayerStatus, StreamType, VoiceConnection, VoiceConnectionStatus, createAudioPlayer, createAudioResource, demuxProbe, joinVoiceChannel } from "@discordjs/voice";
-import { EmbedBuilder, InternalDiscordGatewayAdapterCreator, VoiceBasedChannel, VoiceState } from "discord.js";
+import { AudioPlayer, AudioPlayerStatus, StreamType, VoiceConnection, createAudioPlayer, createAudioResource, joinVoiceChannel } from "@discordjs/voice";
+import { EmbedBuilder, InternalDiscordGatewayAdapterCreator, VoiceBasedChannel } from "discord.js";
 import log from "../../../utils/logger.js";
 import { Playlist } from "../../../db.js";
-import axios from "axios";
-import { YouTubeAPIType } from "../../../types/YouTubeVideoType.js";
-import { getYouTubeVideoId } from "../../../utils/utils.js";
 import client from "../../../client.js";
 import { serverId } from "../../../index.js";
-import got from "got";
-import { Readable } from "node:stream";
 import ytdl from "ytdl-core";
 
 export let CurrentVoiceChannelId: string = "";
@@ -20,19 +15,6 @@ export let VoicePlaying: boolean = false;
 export let CurrentPlayerInstance: AudioPlayer = createAudioPlayer();
 
 export let CurrentPlayingUUID = "";
-
-async function probeAndCreateResource(readableStream, error?: () => void) {
-    let st: Readable | string = "./assets/error.webm", tp = StreamType.WebmOpus;
-    try {
-        const { stream, type } = await demuxProbe(readableStream);
-        st = stream;
-        tp = type;
-    } catch (e) {
-        error();
-    }
-
-    return createAudioResource(st, { inputType: tp });
-}
 
 export async function HandlePlayingSession(type?: number) {
     if (type === 3) CurrentPlayerInstance.stop();
@@ -68,17 +50,6 @@ export async function HandlePlayingSession(type?: number) {
 
             try {
                 CurrentPlayingUUID = track.uid;
-                // const rs = await probeAndCreateResource(got.stream(track.url, {
-                //     headers: {
-                //         "user-agent": "Mozilla/ 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 119.0.0.0 Safari / 537.36",
-                //         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                //         "Sec-Ch-Ua-Platform": "Windows"
-                //     }
-                // }), async function () {
-                //     //@ts-ignore
-                //     await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
-                //     HandlePlayingSession(3);
-                // });
                 const rs = createAudioResource(ytdl(track.url, { filter: format => format.codecs === 'opus' && format.container === 'webm' }), {
                     inlineVolume: true,
                     inputType: StreamType.WebmOpus
