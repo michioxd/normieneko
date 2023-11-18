@@ -5,6 +5,7 @@ import { Playlist } from "../../../db.js";
 import client from "../../../client.js";
 import { serverId } from "../../../index.js";
 import ytdl from "ytdl-core";
+import { Sequelize } from "sequelize";
 
 export let CurrentVoiceChannelId: string = "";
 export let CurrentVoiceInstance: VoiceConnection | null = null;
@@ -31,13 +32,22 @@ export async function HandlePlayingSession(type?: number) {
         });
 
         if (track !== null) {
+            const nextTrack = await Playlist.findOne({
+                where: {
+                    played: 0, uid: {
+                        $not: CurrentPlayingUUID,
+                    }
+                }, order: [
+                    ['id', 'ASC'],
+                ]
+            });
             const embed = new EmbedBuilder()
                 .setAuthor({
                     name: "Đang bắt đầu phát",
                 })
                 .setTitle(track.title)
                 .setURL(track.originalUrl)
-                .setDescription(`Được thêm bởi: <@!${track.addedBy}> vào lúc ${(new Date(track.addedAt)).toLocaleString('vi-VN')}`)
+                .setDescription(`Được thêm bởi: <@!${track.addedBy}> vào lúc ${(new Date(track.addedAt)).toLocaleString('vi-VN')}${nextTrack ? `\n▶️ Bài tiếp theo: **[${nextTrack.title}](${nextTrack.originalUrl})**` : ""}`)
                 .setFooter({
                     text: "Ảo Ảnh Xanh",
                     iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
