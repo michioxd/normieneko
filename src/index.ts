@@ -10,8 +10,6 @@ import eventLists from './event.js';
 import client from './client.js';
 import log from './utils/logger.js';
 import db from './db.js';
-import PlayerDaemon from './commands/dot/music/player.daemon.js';
-
 dotenv.config();
 
 export const globalPrefix = ";";
