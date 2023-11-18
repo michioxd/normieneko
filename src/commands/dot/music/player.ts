@@ -5,7 +5,7 @@ import { Playlist } from "../../../db.js";
 import client from "../../../client.js";
 import { serverId } from "../../../index.js";
 import ytdl from "ytdl-core";
-import { Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 export let CurrentVoiceChannelId: string = "";
 export let CurrentVoiceInstance: VoiceConnection | null = null;
@@ -35,7 +35,7 @@ export async function HandlePlayingSession(type?: number) {
             const nextTrack = await Playlist.findOne({
                 where: {
                     played: 0, uid: {
-                        $not: track.uid,
+                        [Op.ne]: track.uid,
                     }
                 }, order: [
                     ['id', 'ASC'],
