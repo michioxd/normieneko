@@ -41,7 +41,13 @@ const evt = {
                     }
 
                     if (msg[1].length < 1) {
-                        ct.reply("**❌ Lỗi**: Vui lòng cung cấp từ khoá tìm kiếm hoặc liên kết tới video/playlist trên YouTube!");
+                        const checkQueue = await Playlist.count({ where: { played: 0 } });
+                        if (checkQueue > 0) {
+                            CreateVoiceInstance(voiceChannel.id, guild.id, voiceChannel.guild.voiceAdapterCreator, voiceChannel);
+                            await voiceChannel.send(`✅ Đã vào channel **${voiceChannel.name}**, đang tiếp tục phát nhạc trong hàng chờ!`);
+                            return;
+                        }
+                        await ct.reply("**❌ Lỗi**: Vui lòng cung cấp từ khoá tìm kiếm hoặc liên kết tới video/playlist trên YouTube!");
                         return;
                     }
 
@@ -137,8 +143,16 @@ const evt = {
                     }
 
                     DestoryInstance();
-                    await Playlist.update({ played: 1 }, { where: {} });
-                    voiceChannel.send("**🛑 Đã dừng!**");
+                    if (msg[1] === "clear") {
+                        await Playlist.destroy({
+                            where: {},
+                            truncate: true
+                        });
+                        await voiceChannel.send("**🛑/🗑️ Đã dừng đồng thời xoá toàn bộ hàng chờ!**");
+                    } else {
+                        await Playlist.update({ played: 1 }, { where: { uid: track.uid } });
+                        await voiceChannel.send("**🛑 Đã dừng!**");
+                    }
                     break;
 
                 case "queue":
