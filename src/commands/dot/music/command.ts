@@ -150,7 +150,7 @@ const evt = {
                         });
                         await voiceChannel.send("**🛑/🗑️ Đã dừng đồng thời xoá toàn bộ hàng chờ!**");
                     } else {
-                        await Playlist.update({ played: 1 }, { where: { uid: track.uid } });
+                        await Playlist.update({ played: 1 }, { where: { uid: CurrentPlayingUUID } });
                         await voiceChannel.send("**🛑 Đã dừng!**");
                     }
                     break;
