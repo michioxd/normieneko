@@ -35,7 +35,7 @@ export async function HandlePlayingSession(type?: number) {
             const nextTrack = await Playlist.findOne({
                 where: {
                     played: 0, uid: {
-                        $not: CurrentPlayingUUID,
+                        $not: track.uid,
                     }
                 }, order: [
                     ['id', 'ASC'],
