@@ -9,6 +9,7 @@ import { getYouTubeVideoId, isValidUrl, isYouTubePlaylist, isYouTubeWatchUrl } f
 import { Playlist } from "../../../db.js";
 import axios from "axios";
 import { YouTubeAPIType } from "../../../types/YouTubeVideoType.js";
+import ytdl from "ytdl-core";
 
 const evt = {
     name: Events.MessageCreate,
@@ -50,20 +51,19 @@ const evt = {
                 if (isYouTubeWatchUrl(msg[1])) {
                     const rp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu, vui lòng chờ...*")
                     try {
-                        const res = await axios.get(`https://vid.priv.au/api/v1/videos/${getYouTubeVideoId(msg[1])}?hl=en-US`);
+                        const res = await ytdl.getBasicInfo(msg[1]);
                         if (res) {
-                            const youtubeRes = res.data as YouTubeAPIType;
-                            let streamingType = 0, playUrl = "";
+                            const details = res.videoDetails;
                             const embed = new EmbedBuilder()
                                 .setAuthor({
-                                    name: youtubeRes.author,
-                                    url: "https://www.youtube.com/channel/" + youtubeRes.authorId,
-                                    iconURL: youtubeRes.authorThumbnails[youtubeRes.authorThumbnails.length - 1].url,
+                                    name: details.author.name,
+                                    url: details.author.channel_url,
+                                    iconURL: details.author.avatar,
                                 })
-                                .setTitle(youtubeRes.title)
-                                .setURL("https://www.youtube.com/watch?v=" + youtubeRes.videoId)
+                                .setTitle(details.title)
+                                .setURL(details.video_url)
                                 .setDescription(`Đã thêm vào hàng chờ - bởi <@!${ct.author.id}>`)
-                                .setImage(youtubeRes.videoThumbnails[0].url)
+                                .setImage(details.thumbnails[details.thumbnails.length - 1].url)
                                 .setColor("#f50018")
                                 .setFooter({
                                     text: "Ảo Ảnh Xanh",
@@ -71,29 +71,15 @@ const evt = {
                                 })
                                 .setTimestamp();
 
-                            for (let i = 0; i < youtubeRes.adaptiveFormats.length; i++) {
-                                const d = youtubeRes.adaptiveFormats[i];
-                                if (d.audioQuality === "AUDIO_QUALITY_MEDIUM") {
-                                    if (d.type.startsWith("audio/webm") && d.encoding === "opus") {
-                                        playUrl = d.url;
-                                        streamingType = 1;
-                                        break;
-                                    } else if (d.type.startsWith("audio/mp4")) {
-                                        playUrl = d.url;
-                                        streamingType = 0;
-                                    }
-                                }
-                            }
-
                             await Playlist.create({
                                 uid: crypto.randomUUID(),
                                 addedAt: Date.now(),
                                 addedBy: ct.author.id,
-                                url: playUrl,
+                                url: details.video_url,
                                 played: 0,
-                                title: youtubeRes.title,
-                                streamingType: streamingType == 1 ? 1 : 0,
-                                originalUrl: "https://www.youtube.com/watch?v=" + youtubeRes.videoId
+                                title: details.title,
+                                streamingType: 0,
+                                originalUrl: details.video_url
                             });
 
                             await rp.edit({

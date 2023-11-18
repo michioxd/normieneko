@@ -9,6 +9,7 @@ import client from "../../../client.js";
 import { serverId } from "../../../index.js";
 import got from "got";
 import { Readable } from "node:stream";
+import ytdl from "ytdl-core";
 
 export let CurrentVoiceChannelId: string = "";
 export let CurrentVoiceInstance: VoiceConnection | null = null;
@@ -67,21 +68,21 @@ export async function HandlePlayingSession(type?: number) {
 
             try {
                 CurrentPlayingUUID = track.uid;
-                const rs = await probeAndCreateResource(got.stream(track.url, {
-                    headers: {
-                        "user-agent": "Mozilla/ 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 119.0.0.0 Safari / 537.36",
-                        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                        "Sec-Ch-Ua-Platform": "Windows"
-                    }
-                }), async function () {
-                    //@ts-ignore
-                    await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
-                    HandlePlayingSession(3);
-                });
-                // const rs = createAudioResource(track.url, {
-                //     inlineVolume: true,
-                //     inputType: track.streamingType === 1 ? StreamType.WebmOpus : StreamType.Arbitrary
+                // const rs = await probeAndCreateResource(got.stream(track.url, {
+                //     headers: {
+                //         "user-agent": "Mozilla/ 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 119.0.0.0 Safari / 537.36",
+                //         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                //         "Sec-Ch-Ua-Platform": "Windows"
+                //     }
+                // }), async function () {
+                //     //@ts-ignore
+                //     await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
+                //     HandlePlayingSession(3);
                 // });
+                const rs = createAudioResource(ytdl(track.url, { filter: format => format.codecs === 'opus' && format.container === 'webm' }), {
+                    inlineVolume: true,
+                    inputType: StreamType.WebmOpus
+                });
                 CurrentPlayerInstance.play(rs);
             } catch (e) {
                 console.log(e);
@@ -89,7 +90,6 @@ export async function HandlePlayingSession(type?: number) {
                 await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
                 HandlePlayingSession(3);
             }
-
         } else {
             // @ts-ignore
             await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("🟩 Không có bài nào trong hàng chờ, đang thoát...");
