@@ -61,7 +61,7 @@ const evt = {
                                         .setAuthor({
                                             name: details.author.name,
                                             url: details.author.channel_url,
-                                            iconURL: details.author.avatar,
+                                            iconURL: details.author.thumbnails[0].url,
                                         })
                                         .setTitle(details.title)
                                         .setURL(details.video_url)
@@ -144,7 +144,10 @@ const evt = {
                 case "queue":
 
                     if (msg[1] === "clear") {
-                        await Playlist.destroy({});
+                        await Playlist.destroy({
+                            where: {},
+                            truncate: true
+                        });
                         await ct.reply("🗑️ Đã xoá toàn bộ hàng chờ!");
                         return;
                     }
