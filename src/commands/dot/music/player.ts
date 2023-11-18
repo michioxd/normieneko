@@ -75,9 +75,13 @@ CurrentPlayerInstance.on(AudioPlayerStatus.Playing, () => VoicePlaying = true);
 CurrentPlayerInstance.on(AudioPlayerStatus.Paused, () => {
     VoicePlaying = false;
 });
-// CurrentPlayerInstance.on(AudioPlayerStatus.Buffering, () => {
-//     console.log("Buffering");
-// });
+CurrentPlayerInstance.on("error", (e) => {
+    console.error(e);
+    log({
+        type: 3,
+        message: "AudioPlayerError: " + e
+    })
+});
 // CurrentPlayerInstance.on(AudioPlayerStatus.AutoPaused, () => {
 //     console.log("Autopaused");
 // });

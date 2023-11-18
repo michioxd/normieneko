@@ -22,7 +22,7 @@ const evt = {
 
         const msg = ct.content.slice(1, ct.content.length).split(" ");
 
-        if (msg[0] === "play" || msg[0] === "stop" || msg[0] === "skip") {
+        if (msg[0] === "play" || msg[0] === "stop" || msg[0] === "skip" || msg[0] === "queue") {
             const guild = client.guilds.cache.get(serverId);
             const mem = guild.members.cache.get(ct.author.id);
 
@@ -139,6 +139,50 @@ const evt = {
                     DestoryInstance();
                     await Playlist.update({ played: 1 }, { where: {} });
                     voiceChannel.send("**🛑 Đã dừng!**");
+                    break;
+
+                case "queue":
+
+                    if (msg[1] === "clear") {
+                        await Playlist.destroy({});
+                        await ct.reply("🗑️ Đã xoá toàn bộ hàng chờ!");
+                        return;
+                    }
+
+                    const getPage = msg[1] ? parseInt(msg[1]) : 1;
+                    const page = getPage < 0 ? 1 : getPage;
+
+                    const pageOffset = (page - 1) * 10;
+
+                    const queue = await Playlist.findAll({ where: { played: 0 }, order: ['id', 'ASC'], limit: 10, offset: pageOffset });
+
+                    if (queue.length < 1) {
+                        await ct.reply("⛔ Hàng chờ trống, hãy thêm 1 bài hát nào đó bằng cách dùng lệnh `;play <liên kết video YouTube>`");
+                        return;
+                    }
+
+                    const totalQuery = await Playlist.count({ where: { played: 0 } });
+                    const totalPage = Math.round(totalQuery / 10);
+
+                    let records = "";
+
+                    for (let i = 0; i < queue.length; i++) {
+                        records += `${i + 1}. [${queue[i].title}](${queue[i].originalUrl})\n`;
+                    }
+
+                    await ct.reply({
+                        embeds: [{
+                            author: {
+                                name: "📚 Dach sách hàng chờ"
+                            },
+                            description: `${records}\n📖 Trang **${page}** trên **${totalPage}** trong tổng số **${totalQuery}**${page + 1 <= totalPage ? `\n▶️ Qua trang tiếp theo: \`;queue ${page + 1}\`` : ""}\n🗑️ Xoá tất cả: \`;queue clear\``,
+                            footer: {
+                                text: "Ảo Ảnh Xanh",
+                                icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                            }
+                        }]
+                    });
+
                     break;
             }
         }
