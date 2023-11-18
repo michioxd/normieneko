@@ -171,7 +171,7 @@ const evt = {
 
                     for (let i = 0; i < queue.length; i++) {
                         if (queue[i].uid === CurrentPlayingUUID) {
-                            records += `**${i + 1}. [${queue[i].title}](${queue[i].originalUrl})\n**`;
+                            records += `▶️ **${i + 1}. [${queue[i].title}](${queue[i].originalUrl})\n**`;
                         } else {
                             records += `${i + 1}. [${queue[i].title}](${queue[i].originalUrl})\n`;
                         }
