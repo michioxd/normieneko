@@ -153,7 +153,7 @@ const evt = {
                     }
 
                     const getPage = msg[1] ? parseInt(msg[1]) : 1;
-                    const page = getPage < 0 ? 1 : getPage;
+                    const page = getPage <= 0 ? 1 : getPage;
 
                     const pageOffset = (page - 1) * 10;
 
