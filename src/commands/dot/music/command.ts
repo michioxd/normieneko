@@ -4,7 +4,7 @@ import crypto from "crypto";
 
 import { globalPrefix, serverId } from "../../../index.js";
 import client from "../../../client.js";
-import { CreateVoiceInstance, CurrentPlayerInstance, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession } from "./player.js";
+import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession } from "./player.js";
 import { getYouTubeVideoId, isValidUrl, isYouTubePlaylist, isYouTubeWatchUrl } from "../../../utils/utils.js";
 import { Playlist } from "../../../db.js";
 import axios from "axios";
@@ -165,12 +165,16 @@ const evt = {
                     }
 
                     const totalQuery = await Playlist.count({ where: { played: 0 } });
-                    const totalPage = Math.round(totalQuery / 10);
+                    const totalPage = Math.ceil(totalQuery / 10);
 
                     let records = "";
 
                     for (let i = 0; i < queue.length; i++) {
-                        records += `${i + 1}. [${queue[i].title}](${queue[i].originalUrl})\n`;
+                        if (queue[i].uid === CurrentPlayingUUID) {
+                            records += `**${i + 1}. [${queue[i].title}](${queue[i].originalUrl})\n**`;
+                        } else {
+                            records += `${i + 1}. [${queue[i].title}](${queue[i].originalUrl})\n`;
+                        }
                     }
 
                     await ct.reply({
