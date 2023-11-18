@@ -40,7 +40,7 @@ const evt = {
                         ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot Ảo Ảnh Xanh đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
                     }
 
-                    if (msg[1].length < 1) {
+                    if (!msg[1]) {
                         const checkQueue = await Playlist.count({ where: { played: 0 } });
                         if (checkQueue > 0) {
                             CreateVoiceInstance(voiceChannel.id, guild.id, voiceChannel.guild.voiceAdapterCreator, voiceChannel);
