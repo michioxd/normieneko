@@ -77,6 +77,7 @@ const evt = {
                                 for (let i = 0; i < searchData.length; i++) {
                                     if (searchData[i].type === YouTubeSearchResultType.Video) {
                                         searchVideoId = searchData[i].videoId;
+                                        break;
                                     }
                                 }
 
