@@ -5,12 +5,13 @@ import crypto from "crypto";
 import { globalPrefix, serverId } from "../../../index.js";
 import client from "../../../client.js";
 import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession } from "./player.js";
-import { getYouTubeVideoId, isValidUrl, isYouTubePlaylist, isYouTubeWatchUrl } from "../../../utils/utils.js";
+import { getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
 import { Playlist } from "../../../db.js";
 import axios from "axios";
 import { YouTubeAPIType } from "../../../types/YouTubeVideoType.js";
 import ytdl from "ytdl-core";
 import { YouTubeSearchResultType, YouTubeSearchType } from "../../../types/YouTubeSearchType.js";
+import { YouTubePlaylistType } from "../../../types/YouTubePlaylistType.js";
 
 const evt = {
     name: Events.MessageCreate,
@@ -104,90 +105,143 @@ const evt = {
 
                     let targetUrl = "";
 
-                    if (isValidUrl(msg[1])) {
-                        if (!ytdl.validateURL(msg[1])) {
-                            await ct.reply("**❌ Lỗi**: Hiện tại chỉ hỗ trợ liên kết của YouTube!");
-                            return;
-                        }
-                        targetUrl = msg[1];
-                    } else {
-                        let keyword = "";
-                        for (let i = 1; i < msg.length; i++) {
-                            keyword += (msg[i] + " ");
-                        }
-
-                        const searchRp = await ct.reply("*🔍 Đang tìm kiếm, vui lòng chờ...*");
-
+                    if (isValidUrl(msg[1]) && getYouTubeVideoId(msg[1])) {
+                        const playlistRp = await ct.reply("*🔍 Đang lấy dữ liệu của playlist, vui lòng chờ...*");
                         try {
-                            const res = await axios.get("https://vid.priv.au/api/v1/search?q=" + encodeURIComponent(keyword));
+                            const res = await axios.get("https://vid.priv.au/api/v1/playlists/" + getYouTubeVideoId(msg[1]));
 
                             if (res.data) {
-                                const searchData = res.data as YouTubeSearchType[];
-                                let searchVideoId = "";
-                                for (let i = 0; i < searchData.length; i++) {
-                                    if (searchData[i].type === YouTubeSearchResultType.Video) {
-                                        searchVideoId = searchData[i].videoId;
-                                        break;
-                                    }
+                                const playlistResponse = res.data as YouTubePlaylistType;
+                                if (playlistResponse.videos.length < 1) {
+                                    await playlistRp.edit("**❌ Playlist này trống!**");
+                                    return;
                                 }
 
-                                targetUrl = "https://www.youtube.com/watch?v=" + searchVideoId;
-                                searchRp.delete();
+                                for (let i = 0; i < playlistResponse.videos.length; i++) {
+                                    await Playlist.create({
+                                        uid: crypto.randomUUID(),
+                                        addedAt: Date.now(),
+                                        addedBy: ct.author.id,
+                                        url: "https://www.youtube.com/watch?v=" + playlistResponse.videos[i].videoId,
+                                        played: 0,
+                                        title: playlistResponse.videos[i].title,
+                                        streamingType: 0,
+                                        originalUrl: "https://www.youtube.com/watch?v=" + playlistResponse.videos[i].videoId
+                                    });
+                                }
+
+                                await playlistRp.edit({
+                                    content: "✅ Đã thêm playlist vào hàng chờ!",
+                                    embeds: [{
+                                        author: {
+                                            name: playlistResponse.title,
+                                            url: "https://www.youtube.com/playlist?list=" + playlistResponse.playlistId
+                                        },
+                                        thumbnail: {
+                                            url: playlistResponse.playlistThumbnail
+                                        },
+                                        description: `Đã thêm **${playlistResponse.videos}** bài hát vào hàng chờ bởi <@!${ct.author.id}>`,
+                                        footer: {
+                                            text: "Ảo Ảnh Xanh",
+                                            icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                                        }
+                                    }]
+                                });
+
                             } else {
-                                await searchRp.edit("**❌ Lỗi**: Không thể tìm kiếm, vui lòng thử lại sau! `[EMPTY_DATA]`");
+                                await playlistRp.edit("**❌ Lỗi**: Không thể lấy playlist, vui lòng thử lại sau! `[EMPTY_DATA]`");
                                 return;
                             }
                         } catch (e) {
-                            await searchRp.edit("**❌ Lỗi**: Không thể tìm kiếm, vui lòng thử lại sau! `[CATCH_ERR]`");
+                            await playlistRp.edit("**❌ Lỗi**: Không thể lấy playlist, vui lòng thử lại sau! `[CATCH_ERR]`");
                             return;
                         }
-                    }
-
-                    if (ytdl.validateURL(targetUrl)) {
-                        const rp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu, vui lòng chờ...*");
-                        try {
-                            const res = await ytdl.getBasicInfo(targetUrl);
-                            if (res) {
-                                const details = res.videoDetails;
-                                const embed = new EmbedBuilder()
-                                    .setAuthor({
-                                        name: details.author.name,
-                                        url: details.author.channel_url,
-                                        iconURL: details.author.thumbnails[0].url,
-                                    })
-                                    .setTitle(details.title)
-                                    .setURL(details.video_url)
-                                    .setDescription(`Đã thêm vào hàng chờ - bởi <@!${ct.author.id}>`)
-                                    .setImage(details.thumbnails[details.thumbnails.length - 1].url)
-                                    .setColor("#f50018")
-                                    .setFooter({
-                                        text: "Ảo Ảnh Xanh",
-                                        iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
-                                    })
-                                    .setTimestamp();
-
-                                await Playlist.create({
-                                    uid: crypto.randomUUID(),
-                                    addedAt: Date.now(),
-                                    addedBy: ct.author.id,
-                                    url: details.video_url,
-                                    played: 0,
-                                    title: details.title,
-                                    streamingType: 0,
-                                    originalUrl: details.video_url
-                                });
-
-                                await rp.edit({
-                                    content: "✅ Đã thêm vào hàng chờ!",
-                                    embeds: [embed]
-                                });
-
-                            } else {
-                                ct.reply("**❌ Lỗi**: Không thể lấy dữ liệu của video YouTube đó, vui lòng kiểm tra lại! *(Lưu ý: Video riêng tư sẽ không thể hoạt động)*");
+                    } else {
+                        if (isValidUrl(msg[1])) {
+                            if (!ytdl.validateURL(msg[1])) {
+                                await ct.reply("**❌ Lỗi**: Liên kết không đúng định dạng hoặc không được hỗ trợ!");
+                                return;
+                            }
+                            targetUrl = msg[1];
+                        } else {
+                            let keyword = "";
+                            for (let i = 1; i < msg.length; i++) {
+                                keyword += (msg[i] + " ");
                             }
 
-                        } catch (e) {
-                            ct.reply("**❌ Lỗi**: Không thể lấy dữ liệu của video YouTube đó, vui lòng kiểm tra lại! *(Lưu ý: Video riêng tư sẽ không thể hoạt động)*");
+                            const searchRp = await ct.reply("*🔍 Đang tìm kiếm, vui lòng chờ...*");
+
+                            try {
+                                const res = await axios.get("https://vid.priv.au/api/v1/search?q=" + encodeURIComponent(keyword));
+
+                                if (res.data) {
+                                    const searchData = res.data as YouTubeSearchType[];
+                                    let searchVideoId = "";
+                                    for (let i = 0; i < searchData.length; i++) {
+                                        if (searchData[i].type === YouTubeSearchResultType.Video) {
+                                            searchVideoId = searchData[i].videoId;
+                                            break;
+                                        }
+                                    }
+
+                                    targetUrl = "https://www.youtube.com/watch?v=" + searchVideoId;
+                                    searchRp.delete();
+                                } else {
+                                    await searchRp.edit("**❌ Lỗi**: Không thể tìm kiếm, vui lòng thử lại sau! `[EMPTY_DATA]`");
+                                    return;
+                                }
+                            } catch (e) {
+                                await searchRp.edit("**❌ Lỗi**: Không thể tìm kiếm, vui lòng thử lại sau! `[CATCH_ERR]`");
+                                return;
+                            }
+                        }
+
+                        if (ytdl.validateURL(targetUrl)) {
+                            const rp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu, vui lòng chờ...*");
+                            try {
+                                const res = await ytdl.getBasicInfo(targetUrl);
+                                if (res) {
+                                    const details = res.videoDetails;
+                                    const embed = new EmbedBuilder()
+                                        .setAuthor({
+                                            name: details.author.name,
+                                            url: details.author.channel_url,
+                                            iconURL: details.author.thumbnails[0].url,
+                                        })
+                                        .setTitle(details.title)
+                                        .setURL(details.video_url)
+                                        .setDescription(`Đã thêm vào hàng chờ - bởi <@!${ct.author.id}>`)
+                                        .setImage(details.thumbnails[details.thumbnails.length - 1].url)
+                                        .setColor("#f50018")
+                                        .setFooter({
+                                            text: "Ảo Ảnh Xanh",
+                                            iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                        })
+                                        .setTimestamp();
+
+                                    await Playlist.create({
+                                        uid: crypto.randomUUID(),
+                                        addedAt: Date.now(),
+                                        addedBy: ct.author.id,
+                                        url: details.video_url,
+                                        played: 0,
+                                        title: details.title,
+                                        streamingType: 0,
+                                        originalUrl: details.video_url
+                                    });
+
+                                    await rp.edit({
+                                        content: "✅ Đã thêm vào hàng chờ!",
+                                        embeds: [embed]
+                                    });
+
+                                } else {
+                                    ct.reply("**❌ Lỗi**: Không thể lấy dữ liệu của video YouTube đó, vui lòng kiểm tra lại! *(Lưu ý: Video riêng tư sẽ không thể hoạt động)*");
+                                }
+
+                            } catch (e) {
+                                ct.reply("**❌ Lỗi**: Không thể lấy dữ liệu của video YouTube đó, vui lòng kiểm tra lại! *(Lưu ý: Video riêng tư sẽ không thể hoạt động)*");
+                            }
                         }
                     }
 

@@ -23,9 +23,11 @@ export function getYouTubeVideoId(url: string) {
     return match ? match[1] : null;
 }
 
-export function isYouTubePlaylist(url: string) {
-    // Regular expression to match YouTube playlist URLs
-    const playlistRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/|youtu\.be\/)playlist(.*)$/;
-
-    return playlistRegex.test(url);
+export function getYouTubePlaylistId(url: string) {
+    const mainUrl = new URL(url);
+    if (mainUrl.hostname.includes("youtube.com") && mainUrl.pathname.startsWith("/playlist")) {
+        const playlistId = mainUrl.searchParams.get("list");
+        return playlistId && playlistId.length > 0 ? playlistId : false;
+    }
+    return false;
 }
