@@ -10,6 +10,7 @@ import { Playlist } from "../../../db.js";
 import axios from "axios";
 import { YouTubeAPIType } from "../../../types/YouTubeVideoType.js";
 import ytdl from "ytdl-core";
+import { YouTubeSearchResultType, YouTubeSearchType } from "../../../types/YouTubeSearchType.js";
 
 const evt = {
     name: Events.MessageCreate,
@@ -47,62 +48,95 @@ const evt = {
                             await voiceChannel.send(`✅ Đã vào channel **${voiceChannel.name}**, đang tiếp tục phát nhạc trong hàng chờ!`);
                             return;
                         }
-                        await ct.reply("**❌ Lỗi**: Vui lòng cung cấp từ khoá tìm kiếm hoặc liên kết tới video/playlist trên YouTube!");
+                        await ct.reply("**❌ Lỗi**: Vui lòng cung cấp từ khoá tìm kiếm hoặc liên kết tới video trên YouTube!");
                         return;
                     }
 
+                    let targetUrl = "";
+
                     if (isValidUrl(msg[1])) {
-                        if (!isYouTubeWatchUrl(msg[1]) && !isYouTubePlaylist(msg[1])) {
+                        if (!ytdl.validateURL(msg[1])) {
                             await ct.reply("**❌ Lỗi**: Hiện tại chỉ hỗ trợ liên kết của YouTube!");
                             return;
                         }
+                        targetUrl = msg[1];
+                    } else {
+                        let keyword = "";
+                        for (let i = 1; i < msg.length; i++) {
+                            keyword += (msg[i] + " ");
+                        }
 
-                        if (isYouTubeWatchUrl(msg[1])) {
-                            const rp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu, vui lòng chờ...*")
-                            try {
-                                const res = await ytdl.getBasicInfo(msg[1]);
-                                if (res) {
-                                    const details = res.videoDetails;
-                                    const embed = new EmbedBuilder()
-                                        .setAuthor({
-                                            name: details.author.name,
-                                            url: details.author.channel_url,
-                                            iconURL: details.author.thumbnails[0].url,
-                                        })
-                                        .setTitle(details.title)
-                                        .setURL(details.video_url)
-                                        .setDescription(`Đã thêm vào hàng chờ - bởi <@!${ct.author.id}>`)
-                                        .setImage(details.thumbnails[details.thumbnails.length - 1].url)
-                                        .setColor("#f50018")
-                                        .setFooter({
-                                            text: "Ảo Ảnh Xanh",
-                                            iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
-                                        })
-                                        .setTimestamp();
+                        const searchRp = await ct.reply("*🔍 Đang tìm kiếm, vui lòng chờ...*");
 
-                                    await Playlist.create({
-                                        uid: crypto.randomUUID(),
-                                        addedAt: Date.now(),
-                                        addedBy: ct.author.id,
-                                        url: details.video_url,
-                                        played: 0,
-                                        title: details.title,
-                                        streamingType: 0,
-                                        originalUrl: details.video_url
-                                    });
+                        try {
+                            const res = await axios.get("https://vid.priv.au/api/v1/search?q=" + encodeURIComponent(keyword));
 
-                                    await rp.edit({
-                                        content: "✅ Đã thêm vào hàng chờ!",
-                                        embeds: [embed]
-                                    });
-
-                                } else {
-                                    ct.reply("**❌ Lỗi**: Không thể lấy dữ liệu của video YouTube đó, vui lòng kiểm tra lại! *(Lưu ý: Video riêng tư sẽ không thể hoạt động)*");
+                            if (res.data) {
+                                const searchData = res.data as YouTubeSearchType[];
+                                let searchVideoId = "";
+                                for (let i = 0; i < searchData.length; i++) {
+                                    if (searchData[i].type === YouTubeSearchResultType.Video) {
+                                        searchVideoId = searchData[i].videoId;
+                                    }
                                 }
 
-                            } catch (e) {
+                                targetUrl = "https://www.youtube.com/watch?v=" + searchVideoId;
+                                searchRp.delete();
+                            } else {
+                                await searchRp.edit("**❌ Lỗi**: Không thể tìm kiếm, vui lòng thử lại sau! `[EMPTY_DATA]`");
+                                return;
+                            }
+                        } catch (e) {
+                            await searchRp.edit("**❌ Lỗi**: Không thể tìm kiếm, vui lòng thử lại sau! `[CATCH_ERR]`");
+                            return;
+                        }
+                    }
+
+                    if (ytdl.validateURL(targetUrl)) {
+                        const rp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu, vui lòng chờ...*");
+                        try {
+                            const res = await ytdl.getBasicInfo(targetUrl);
+                            if (res) {
+                                const details = res.videoDetails;
+                                const embed = new EmbedBuilder()
+                                    .setAuthor({
+                                        name: details.author.name,
+                                        url: details.author.channel_url,
+                                        iconURL: details.author.thumbnails[0].url,
+                                    })
+                                    .setTitle(details.title)
+                                    .setURL(details.video_url)
+                                    .setDescription(`Đã thêm vào hàng chờ - bởi <@!${ct.author.id}>`)
+                                    .setImage(details.thumbnails[details.thumbnails.length - 1].url)
+                                    .setColor("#f50018")
+                                    .setFooter({
+                                        text: "Ảo Ảnh Xanh",
+                                        iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                    })
+                                    .setTimestamp();
+
+                                await Playlist.create({
+                                    uid: crypto.randomUUID(),
+                                    addedAt: Date.now(),
+                                    addedBy: ct.author.id,
+                                    url: details.video_url,
+                                    played: 0,
+                                    title: details.title,
+                                    streamingType: 0,
+                                    originalUrl: details.video_url
+                                });
+
+                                await rp.edit({
+                                    content: "✅ Đã thêm vào hàng chờ!",
+                                    embeds: [embed]
+                                });
+
+                            } else {
                                 ct.reply("**❌ Lỗi**: Không thể lấy dữ liệu của video YouTube đó, vui lòng kiểm tra lại! *(Lưu ý: Video riêng tư sẽ không thể hoạt động)*");
                             }
+
+                        } catch (e) {
+                            ct.reply("**❌ Lỗi**: Không thể lấy dữ liệu của video YouTube đó, vui lòng kiểm tra lại! *(Lưu ý: Video riêng tư sẽ không thể hoạt động)*");
                         }
                     }
 
