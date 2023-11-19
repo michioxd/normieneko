@@ -105,7 +105,7 @@ const evt = {
 
                     let targetUrl = "";
 
-                    if (isValidUrl(msg[1]) && getYouTubeVideoId(msg[1])) {
+                    if (isValidUrl(msg[1]) && getYouTubeVideoId(msg[1]) !== "") {
                         const playlistRp = await ct.reply("*🔍 Đang lấy dữ liệu của playlist, vui lòng chờ...*");
                         try {
                             const res = await axios.get("https://vid.priv.au/api/v1/playlists/" + getYouTubeVideoId(msg[1]));

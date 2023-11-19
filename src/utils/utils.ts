@@ -27,7 +27,7 @@ export function getYouTubePlaylistId(url: string) {
     const mainUrl = new URL(url);
     if (mainUrl.hostname.includes("youtube.com") && mainUrl.pathname.startsWith("/playlist")) {
         const playlistId = mainUrl.searchParams.get("list");
-        return playlistId && playlistId.length > 0 ? playlistId : false;
+        return playlistId && playlistId.length > 0 ? playlistId : "";
     }
-    return false;
+    return "";
 }
