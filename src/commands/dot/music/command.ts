@@ -5,7 +5,7 @@ import crypto from "crypto";
 import { globalPrefix, serverId } from "../../../index.js";
 import client from "../../../client.js";
 import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession } from "./player.js";
-import { getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
+import { getYouTubePlaylistId, getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
 import { Playlist } from "../../../db.js";
 import axios from "axios";
 import { YouTubeAPIType } from "../../../types/YouTubeVideoType.js";
@@ -105,10 +105,10 @@ const evt = {
 
                     let targetUrl = "";
 
-                    if (isValidUrl(msg[1]) && getYouTubeVideoId(msg[1]) !== "") {
+                    if (isValidUrl(msg[1]) && getYouTubePlaylistId(msg[1]) !== "") {
                         const playlistRp = await ct.reply("*🔍 Đang lấy dữ liệu của playlist, vui lòng chờ...*");
                         try {
-                            const res = await axios.get("https://vid.priv.au/api/v1/playlists/" + getYouTubeVideoId(msg[1]));
+                            const res = await axios.get("https://vid.priv.au/api/v1/playlists/" + getYouTubePlaylistId(msg[1]));
 
                             if (res.data) {
                                 const playlistResponse = res.data as YouTubePlaylistType;
@@ -153,7 +153,7 @@ const evt = {
                                 return;
                             }
                         } catch (e) {
-                            await playlistRp.edit("**❌ Lỗi**: Không thể lấy playlist, vui lòng thử lại sau! `[CATCH_ERR]`" + msg[1]);
+                            await playlistRp.edit("**❌ Lỗi**: Không thể lấy playlist, vui lòng thử lại sau! `[CATCH_ERR]`");
                             return;
                         }
                     } else {
