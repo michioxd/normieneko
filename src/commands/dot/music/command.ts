@@ -140,7 +140,7 @@ const evt = {
                                         thumbnail: {
                                             url: playlistResponse.playlistThumbnail
                                         },
-                                        description: `Đã thêm **${playlistResponse.videos}** bài hát vào hàng chờ bởi <@!${ct.author.id}>`,
+                                        description: `Đã thêm **${playlistResponse.videos.length}** bài hát vào hàng chờ bởi <@!${ct.author.id}>`,
                                         footer: {
                                             text: "Ảo Ảnh Xanh",
                                             icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
