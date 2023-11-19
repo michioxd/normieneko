@@ -153,7 +153,7 @@ const evt = {
                                 return;
                             }
                         } catch (e) {
-                            await playlistRp.edit("**❌ Lỗi**: Không thể lấy playlist, vui lòng thử lại sau! `[CATCH_ERR]`" + getYouTubeVideoId(msg[1]));
+                            await playlistRp.edit("**❌ Lỗi**: Không thể lấy playlist, vui lòng thử lại sau! `[CATCH_ERR]`" + msg[1]);
                             return;
                         }
                     } else {
