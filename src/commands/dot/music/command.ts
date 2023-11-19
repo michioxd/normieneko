@@ -42,7 +42,7 @@ const evt = {
             const queue = await Playlist.findAll({ where: { played: 0 }, order: [['id', 'ASC']], limit: 10, offset: pageOffset });
 
             if (queue.length < 1) {
-                await ct.reply("⛔ Hàng chờ trống, hãy thêm 1 bài hát nào đó bằng cách dùng lệnh `;play <liên kết video YouTube hoặc từ khoá tìm kiếm>`");
+                await ct.reply("⛔ Hàng chờ trống, hãy thêm 1 bài hát nào đó bằng cách dùng lệnh `;play <liên kết video/playlist YouTube hoặc từ khoá tìm kiếm>`");
                 return;
             }
 
