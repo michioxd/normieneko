@@ -153,7 +153,7 @@ const evt = {
                                 return;
                             }
                         } catch (e) {
-                            await playlistRp.edit("**❌ Lỗi**: Không thể lấy playlist, vui lòng thử lại sau! `[CATCH_ERR]`");
+                            await playlistRp.edit("**❌ Lỗi**: Không thể lấy playlist, vui lòng thử lại sau! `[CATCH_ERR]`" + e);
                             return;
                         }
                     } else {
