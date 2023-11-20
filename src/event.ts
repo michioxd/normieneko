@@ -7,7 +7,6 @@ import emotion from './commands/dot/emotion.js';
 import help from './commands/dot/help.js';
 import love from './commands/dot/love.js';
 import taixiu from './commands/dot/taixiu.js';
-import farewell from './commands/dot/farewell.js';
 import musicPlayer_play from './commands/dot/music/command.js';
 
 const eventLists: EventType[] = [
