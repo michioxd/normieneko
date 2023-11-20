@@ -274,7 +274,10 @@ const evt = {
                         ]
                     });
 
-                    await Playlist.update({ played: 1 }, { where: { uid: track.uid } });
+                    try {
+                        await Playlist.update({ played: 1 }, { where: { uid: track.uid } });
+                    } catch (e) { }
+
 
                     HandlePlayingSession(3);
 
