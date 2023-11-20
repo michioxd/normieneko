@@ -90,6 +90,7 @@ const evt = {
 
                     if (CurrentVoiceInstance !== null && CurrentVoiceChannelId !== voiceChannel.id) {
                         ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot Ảo Ảnh Xanh đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
+                        return;
                     }
 
                     if (!msg[1]) {
