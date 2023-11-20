@@ -1,5 +1,5 @@
 import { Events, Message, VoiceState } from "discord.js";
-import { CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance } from "./player";
+import { CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance } from "./player.js";
 
 const evt = {
     name: Events.VoiceStateUpdate,
