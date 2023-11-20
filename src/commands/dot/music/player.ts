@@ -122,12 +122,16 @@ CurrentPlayerInstance.on(AudioPlayerStatus.Playing, () => VoicePlaying = true);
 CurrentPlayerInstance.on(AudioPlayerStatus.Paused, () => {
     VoicePlaying = false;
 });
-CurrentPlayerInstance.on("error", (e) => {
-    console.error(e);
+CurrentPlayerInstance.on("error", async (e) => {
     log({
         type: 3,
         message: "AudioPlayerError: " + e
-    })
+    });
+    if (CurrentVoiceChannelId !== "") {
+        //@ts-ignore
+        await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác... `[EVT_E]`");
+        HandlePlayingSession(3);
+    }
 });
 // CurrentPlayerInstance.on(AudioPlayerStatus.AutoPaused, () => {
 //     console.log("Autopaused");

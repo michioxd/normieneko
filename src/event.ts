@@ -7,7 +7,8 @@ import emotion from './commands/dot/emotion.js';
 import help from './commands/dot/help.js';
 import love from './commands/dot/love.js';
 import taixiu from './commands/dot/taixiu.js';
-import musicPlayer_play from './commands/dot/music/command.js';
+import musicPlayer_command from './commands/dot/music/command.js';
+import musicPlayer_listening from './commands/dot/music/listening.js';
 
 const eventLists: EventType[] = [
     welcome,
@@ -17,7 +18,10 @@ const eventLists: EventType[] = [
     help,
     love,
     taixiu,
-    musicPlayer_play
+    musicPlayer_command,
+
+    //@ts-ignore
+    musicPlayer_listening
 ];
 
 export default eventLists;
