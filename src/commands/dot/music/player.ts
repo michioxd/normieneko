@@ -21,7 +21,9 @@ export async function HandlePlayingSession(type?: number) {
     if (type === 3) CurrentPlayerInstance.stop();
     if (VoicePlaying === true) return;
     if (CurrentPlayingUUID !== "") {
-        await Playlist.update({ played: 1 }, { where: { uid: CurrentPlayingUUID } });
+        try {
+            await Playlist.update({ played: 1 }, { where: { uid: CurrentPlayingUUID } });
+        } catch (e) { }
     }
 
     try {
