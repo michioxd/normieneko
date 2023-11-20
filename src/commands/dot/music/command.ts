@@ -117,18 +117,26 @@ const evt = {
                                     return;
                                 }
 
+                                let insertData = [];
+
                                 for (let i = 0; i < playlistResponse.videos.length; i++) {
-                                    await Playlist.create({
-                                        uid: crypto.randomUUID(),
-                                        addedAt: Date.now(),
-                                        addedBy: ct.author.id,
-                                        url: "https://www.youtube.com/watch?v=" + playlistResponse.videos[i].videoId,
-                                        played: 0,
-                                        title: playlistResponse.videos[i].title,
-                                        streamingType: 0,
-                                        originalUrl: "https://www.youtube.com/watch?v=" + playlistResponse.videos[i].videoId
-                                    });
+
+                                    insertData = [
+                                        ...insertData,
+                                        {
+                                            uid: crypto.randomUUID(),
+                                            addedAt: Date.now(),
+                                            addedBy: ct.author.id,
+                                            url: "https://www.youtube.com/watch?v=" + playlistResponse.videos[i].videoId,
+                                            played: 0,
+                                            title: playlistResponse.videos[i].title,
+                                            streamingType: 0,
+                                            originalUrl: "https://www.youtube.com/watch?v=" + playlistResponse.videos[i].videoId
+                                        }
+                                    ]
                                 }
+
+                                await Playlist.bulkCreate(insertData);
 
                                 await playlistRp.edit({
                                     content: "✅ Đã thêm playlist vào hàng chờ!",
@@ -172,7 +180,7 @@ const evt = {
                             const searchRp = await ct.reply("*🔍 Đang tìm kiếm, vui lòng chờ...*");
 
                             try {
-                                const res = await axios.get("https://vid.priv.au/api/v1/search?q=" + encodeURIComponent(keyword));
+                                const res = await axios.get("https://vid.priv.au/api/v1/search?type=video&q=" + encodeURIComponent(keyword));
 
                                 if (res.data) {
                                     const searchData = res.data as YouTubeSearchType[];
