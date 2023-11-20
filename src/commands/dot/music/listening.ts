@@ -6,11 +6,15 @@ import cfg from "../../../config.js";
 const evt = {
     name: Events.VoiceStateUpdate,
     once: false,
-    execute: async (oldState: VoiceState, newState: VoiceState) => {
+    execute: async () => {
         if (CurrentVoiceInstance === null) return;
         if (CurrentVoiceChannelId === "") return;
         const voiceChannel = client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId);
 
+        if (!voiceChannel) {
+            DestoryInstance();
+            return;
+        }
         if (voiceChannel?.type === ChannelType.GuildVoice) {
             if (voiceChannel?.members.size <= 1) {
                 //@ts-ignore
