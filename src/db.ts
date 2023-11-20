@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model, InferAttributes, InferCreationAttributes } from "sequelize";
-import { GiveawayJoinedType, GiveawayType, PlaylistType, UserType } from "./types";
+import { GiveawayJoinedType, GiveawayType, PlaylistType, SpotifyAccessTokenType, UserType } from "./types";
 import log from "./utils/logger.js";
 
 
@@ -40,7 +40,13 @@ const Playlist = db.define<PlaylistType>("playlist", {
     played: DataTypes.NUMBER,
     title: DataTypes.STRING,
     originalUrl: DataTypes.STRING,
-    streamingType: DataTypes.NUMBER
+    streamingType: DataTypes.NUMBER,
+    fromTitle: DataTypes.NUMBER
+});
+
+const SpotifyAccessToken = db.define<SpotifyAccessTokenType>("SpotifyAccessToken", {
+    token: DataTypes.STRING,
+    lastUpdated: DataTypes.NUMBER
 });
 
 try {
@@ -48,6 +54,7 @@ try {
     await Giveaway.sync();
     await GiveawayJoined.sync();
     await Playlist.sync();
+    await SpotifyAccessToken.sync();
 } catch (e) {
     log({
         type: 3,
@@ -57,4 +64,4 @@ try {
 
 export default db;
 
-export { User, Giveaway, GiveawayJoined, Playlist };
+export { User, Giveaway, GiveawayJoined, Playlist, SpotifyAccessToken };

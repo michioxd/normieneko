@@ -1,17 +1,17 @@
 import { EmbedBuilder, Events, Message } from "discord.js";
-import { StreamType, VoiceConnection, createAudioPlayer, createAudioResource, joinVoiceChannel } from "@discordjs/voice";
 import crypto from "crypto";
-
-import { globalPrefix, serverId } from "../../../index.js";
 import client from "../../../client.js";
 import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession } from "./player.js";
-import { getYouTubePlaylistId, getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
+import { getSpotifyPlaylistId, getSpotifyTrackId, getYouTubePlaylistId, getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
 import { Playlist } from "../../../db.js";
 import axios from "axios";
-import { YouTubeAPIType } from "../../../types/YouTubeVideoType.js";
 import ytdl from "ytdl-core";
 import { YouTubeSearchResultType, YouTubeSearchType } from "../../../types/YouTubeSearchType.js";
 import { YouTubePlaylistType } from "../../../types/YouTubePlaylistType.js";
+import cfg from "../../../config.js";
+import { GetAccessToken } from "../../../modules/spotify.js";
+import { SpotifyPlaylistType } from "../../../types/SpotifyPlaylistType.js";
+import { SpotifyTrackType } from "../../../types/SpotifyTrackType.js";
 
 const evt = {
     name: Events.MessageCreate,
@@ -20,7 +20,7 @@ const evt = {
         // we will prevent it simbot channel
         if (ct.channelId === "1139181936053583904") return;
 
-        if (!ct.content.startsWith(globalPrefix)) return;
+        if (!ct.content.startsWith(cfg.globalPrefix)) return;
 
         const msg = ct.content.slice(1, ct.content.length).split(" ");
 
@@ -75,7 +75,7 @@ const evt = {
         }
 
         if (msg[0] === "play" || msg[0] === "stop" || msg[0] === "skip") {
-            const guild = client.guilds.cache.get(serverId);
+            const guild = client.guilds.cache.get(cfg.serverId);
             const mem = guild.members.cache.get(ct.author.id);
 
             if (!mem.voice.channel) {
@@ -105,10 +105,145 @@ const evt = {
 
                     let targetUrl = "";
 
-                    if (isValidUrl(msg[1]) && getYouTubePlaylistId(msg[1]) !== "") {
-                        const playlistRp = await ct.reply("*🔍 Đang lấy dữ liệu của playlist, vui lòng chờ...*");
+                    if (isValidUrl(msg[1]) && getSpotifyPlaylistId(msg[1])) {
+                        // handle spotfiy playlist
+                        const playlistSpotifyRp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu của playlist trên Spotify, vui lòng chờ...*");
+
                         try {
-                            const res = await axios.get("https://vid.priv.au/api/v1/playlists/" + getYouTubePlaylistId(msg[1]));
+                            const getAccessToken = await GetAccessToken();
+                            if (getAccessToken === false) {
+                                await playlistSpotifyRp.edit("**❌ Lỗi**: Không thể kết nối tới Spotify!");
+                                return;
+                            }
+                            const getPlaylistData = await axios.get(`https://api.spotify.com/v1/playlists/${getSpotifyPlaylistId(msg[1])}`, {
+                                headers: {
+                                    'Authorization': `Bearer ${getAccessToken}`,
+                                }
+                            });
+
+                            if (getPlaylistData.data) {
+                                const plSpotifyRes = getPlaylistData.data as SpotifyPlaylistType;
+                                if (plSpotifyRes.tracks.items.length < 0) {
+                                    await playlistSpotifyRp.edit("**❌ Playlist này trống!**");
+                                    return;
+                                }
+
+                                let insertData = [];
+
+                                for (let i = 0; i < plSpotifyRes.tracks.items.length; i++) {
+                                    const item = plSpotifyRes.tracks.items[i];
+                                    let artist = "";
+                                    for (let i = 0; i < item.track.artists.length; i++) {
+                                        artist += (item.track.artists[i].name + (i !== item.track.artists.length - 1 ? ", " : ""));
+                                    }
+                                    insertData = [
+                                        ...insertData,
+                                        {
+                                            uid: crypto.randomUUID(),
+                                            addedAt: Date.now(),
+                                            addedBy: ct.author.id,
+                                            url: "https://open.spotify.com/track/" + item.track.id,
+                                            played: 0,
+                                            title: artist + " - " + item.track.name,
+                                            streamingType: 0,
+                                            fromTitle: 1,
+                                            originalUrl: "https://open.spotify.com/track/" + item.track.id
+                                        }
+                                    ]
+                                }
+
+                                await Playlist.bulkCreate(insertData);
+
+                                await playlistSpotifyRp.edit({
+                                    content: "✅ Đã thêm playlist từ Spotify vào hàng chờ!",
+                                    embeds: [{
+                                        author: {
+                                            name: plSpotifyRes.name,
+                                            url: "https://open.spotify.com/playlist/" + plSpotifyRes.id
+                                        },
+                                        thumbnail: {
+                                            url: plSpotifyRes.images[0].url
+                                        },
+                                        description: `Đã thêm **${plSpotifyRes.tracks.items.length}** bài hát từ playlist Spotify vào hàng chờ bởi <@!${ct.author.id}>`,
+                                        footer: {
+                                            text: "Ảo Ảnh Xanh",
+                                            icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                                        }
+                                    }]
+                                });
+                            } else {
+                                await playlistSpotifyRp.edit("**❌ Lỗi**: Không thể lấy playlist từ Spotify, vui lòng thử lại sau! `[EMPTY_DATA]`");
+                                return;
+                            }
+
+                        } catch (e) {
+                            await playlistSpotifyRp.edit("**❌ Lỗi**: Không thể lấy playlist từ Spotify, vui lòng thử lại sau! `[CATCH_ERR]`");
+                            return;
+                        }
+                    } else if (isValidUrl(msg[1]) && getSpotifyTrackId(msg[1]) !== "") {
+                        // handle spotfiy track
+                        const trackSpotifyRp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu của bài hát trên Spotify, vui lòng chờ...*");
+
+                        try {
+                            const getAccessToken = await GetAccessToken();
+                            if (getAccessToken === false) {
+                                await trackSpotifyRp.edit("**❌ Lỗi**: Không thể kết nối tới Spotify!");
+                                return;
+                            }
+                            const getTrackData = await axios.get(`https://api.spotify.com/v1/tracks/${getSpotifyTrackId(msg[1])}`, {
+                                headers: {
+                                    'Authorization': `Bearer ${getAccessToken}`,
+                                }
+                            });
+
+                            if (getTrackData.data) {
+                                const trackSpotifyRes = getTrackData.data as SpotifyTrackType;
+                                let artist = "";
+                                for (let i = 0; i < trackSpotifyRes.artists.length; i++) {
+                                    artist += (trackSpotifyRes.artists[i].name + (i !== trackSpotifyRes.artists.length - 1 ? ", " : ""));
+                                }
+                                await Playlist.create({
+                                    uid: crypto.randomUUID(),
+                                    addedAt: Date.now(),
+                                    addedBy: ct.author.id,
+                                    url: "https://open.spotify.com/track/" + trackSpotifyRes.id,
+                                    played: 0,
+                                    title: artist + " - " + trackSpotifyRes.name,
+                                    streamingType: 0,
+                                    fromTitle: 1,
+                                    originalUrl: "https://open.spotify.com/track/" + trackSpotifyRes.id
+                                });
+
+                                const embed = new EmbedBuilder()
+                                    .setTitle(artist + " - " + trackSpotifyRes.name)
+                                    .setURL("https://open.spotify.com/track/" + trackSpotifyRes.id)
+                                    .setDescription(`Đã thêm vào hàng chờ từ Spotify bởi <@!${ct.author.id}>`)
+                                    .setImage(trackSpotifyRes.album.images[0].url)
+                                    .setColor("#f50018")
+                                    .setFooter({
+                                        text: "Ảo Ảnh Xanh",
+                                        iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                    })
+                                    .setTimestamp();
+
+                                trackSpotifyRp.edit({
+                                    content: "✅ Đã thêm bài hát từ Spotify vào hàng chờ!",
+                                    embeds: [embed]
+                                });
+                            } else {
+                                await trackSpotifyRp.edit("**❌ Lỗi**: Không thể lấy bài hát từ Spotify, vui lòng thử lại sau! `[EMPTY_DATA]`");
+                                return;
+                            }
+                        } catch (e) {
+                            await trackSpotifyRp.edit("**❌ Lỗi**: Không thể lấy bài hát từ Spotify, vui lòng thử lại sau! `[CATCH_ERR]`");
+                            return;
+                        }
+
+                    } else if (isValidUrl(msg[1]) && getYouTubePlaylistId(msg[1]) !== "") {
+                        // handle YouTube Playlist
+                        const playlistRp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu của playlist, vui lòng chờ...*");
+                        try {
+                            const res = await axios.get("https://" + cfg.invidiousEndpoint + "/api/v1/playlists/" + getYouTubePlaylistId(msg[1]));
 
                             if (res.data) {
                                 const playlistResponse = res.data as YouTubePlaylistType;
@@ -165,6 +300,7 @@ const evt = {
                             return;
                         }
                     } else {
+                        // handle Normal request
                         if (isValidUrl(msg[1])) {
                             if (!ytdl.validateURL(msg[1])) {
                                 await ct.reply("**❌ Lỗi**: Liên kết không đúng định dạng hoặc không được hỗ trợ!");
@@ -172,6 +308,7 @@ const evt = {
                             }
                             targetUrl = msg[1];
                         } else {
+                            // handle search
                             let keyword = "";
                             for (let i = 1; i < msg.length; i++) {
                                 keyword += (msg[i] + " ");
@@ -180,7 +317,7 @@ const evt = {
                             const searchRp = await ct.reply("*🔍 Đang tìm kiếm, vui lòng chờ...*");
 
                             try {
-                                const res = await axios.get("https://vid.priv.au/api/v1/search?type=video&q=" + encodeURIComponent(keyword));
+                                const res = await axios.get("https://" + cfg.invidiousEndpoint + "/api/v1/search?type=video&q=" + encodeURIComponent(keyword));
 
                                 if (res.data) {
                                     const searchData = res.data as YouTubeSearchType[];
@@ -204,6 +341,7 @@ const evt = {
                             }
                         }
 
+                        // handle youtube url
                         if (ytdl.validateURL(targetUrl)) {
                             const rp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu, vui lòng chờ...*");
                             try {

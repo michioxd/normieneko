@@ -46,7 +46,8 @@ export interface PlaylistType extends Model<InferAttributes<PlaylistType>, Infer
     played: 0 | 1,
     title: string,
     originalUrl: string,
-    streamingType: 0 | 1
+    streamingType: 0 | 1,
+    fromTitle: 0 | 1
 }
 
 export type EmotionType = {
@@ -56,4 +57,8 @@ export type EmotionType = {
     color: ColorResolvable
 }
 
+export interface SpotifyAccessTokenType extends Model<InferAttributes<SpotifyAccessTokenType>, InferCreationAttributes<SpotifyAccessTokenType>> {
+    token: string,
+    lastUpdated: number
+}
 

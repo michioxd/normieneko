@@ -1,9 +1,6 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Events, Message, time } from "discord.js";
+import { Events, Message } from "discord.js";
 import { setTimeout as wait } from 'node:timers/promises';
-
-import { globalPrefix } from "../../index.js";
-import { emotion } from "./emotion.js";
-import client from "../../client.js";
+import cfg from "../../config.js";
 
 /*const diceEmoji = [
     "", // empty for zero
@@ -34,17 +31,14 @@ const evt = {
         // we will prevent it simbot channel
         if (ct.channelId === "1139181936053583904") return;
 
-        if (!ct.content.startsWith(globalPrefix)) return;
+        if (!ct.content.startsWith(cfg.globalPrefix)) return;
 
         const msg = ct.content.slice(1, ct.content.length).split(" ");
 
         if (msg[0] === "taixiu") {
             const rep = await ct.reply({
                 content: `# ...
-${diceEmoji[7]} ${diceEmoji[7]} ${diceEmoji[7]}
-
-ID Phiên: \`sessionIdComingSoon\`
-Người tạo: <@!${ct.author.id}>`, components: []
+${diceEmoji[7]} ${diceEmoji[7]} ${diceEmoji[7]}`, components: []
             });
 
             let x1 = 0;
@@ -65,40 +59,28 @@ Người tạo: <@!${ct.author.id}>`, components: []
 
             await rep.edit({
                 content: `# ...
-${diceEmoji[x1]} ${diceEmoji[7]} ${diceEmoji[7]}
-
-ID Phiên: \`sessionIdComingSoon\`
-Người tạo: <@!${ct.author.id}>`, components: []
+${diceEmoji[x1]} ${diceEmoji[7]} ${diceEmoji[7]}`, components: []
             });
 
             await wait(1000);
 
             await rep.edit({
                 content: `# ...
-${diceEmoji[x1]} ${diceEmoji[x2]} ${diceEmoji[7]}
-
-ID Phiên: \`sessionIdComingSoon\`
-Người tạo: <@!${ct.author.id}>`, components: []
+${diceEmoji[x1]} ${diceEmoji[x2]} ${diceEmoji[7]}`, components: []
             });
 
             await wait(1000);
 
             await rep.edit({
                 content: `# ...
-${diceEmoji[x1]} ${diceEmoji[x2]} ${diceEmoji[x3]}
-
-ID Phiên: \`sessionIdComingSoon\`
-Người tạo: <@!${ct.author.id}>`, components: []
+${diceEmoji[x1]} ${diceEmoji[x2]} ${diceEmoji[x3]}`, components: []
             });
 
             await wait(500);
 
             await rep.edit({
                 content: `# ${resSession ? "TÀI" : "XỈU"}
-${diceEmoji[x1]} ${diceEmoji[x2]} ${diceEmoji[x3]}
-
-ID Phiên: \`sessionIdComingSoon\`
-Người tạo: <@!${ct.author.id}>`, components: []
+${diceEmoji[x1]} ${diceEmoji[x2]} ${diceEmoji[x3]}`, components: []
             });
 
         }

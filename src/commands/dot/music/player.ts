@@ -3,9 +3,11 @@ import { EmbedBuilder, InternalDiscordGatewayAdapterCreator, VoiceBasedChannel }
 import log from "../../../utils/logger.js";
 import { Playlist } from "../../../db.js";
 import client from "../../../client.js";
-import { serverId } from "../../../index.js";
 import ytdl from "ytdl-core";
 import { Op, Sequelize } from "sequelize";
+import cfg from "../../../config.js";
+import axios from "axios";
+import { YouTubeSearchResultType, YouTubeSearchType } from "../../../types/YouTubeSearchType.js";
 
 export let CurrentVoiceChannelId: string = "";
 export let CurrentVoiceInstance: VoiceConnection | null = null;
@@ -49,33 +51,66 @@ export async function HandlePlayingSession(type?: number) {
                 })
                 .setTitle(track.title)
                 .setURL(track.originalUrl)
-                .setDescription(`Được thêm bởi: <@!${track.addedBy}> vào lúc ${(new Date(track.addedAt)).toLocaleString('vi-VN')}${nextTrack ? `\n▶️ Bài tiếp theo: **[${nextTrack.title}](${nextTrack.originalUrl})**` : ""}`)
+                .setDescription(`Được thêm bởi **<@!${track.addedBy}>**${track.fromTitle ? " từ Spotify" : ""} vào lúc **${(new Date(track.addedAt)).toLocaleString('vi-VN')}**${nextTrack ? `\n▶️ Bài tiếp theo: **[${nextTrack.title}](${nextTrack.originalUrl})**` : ""}`)
                 .setFooter({
                     text: "Ảo Ảnh Xanh",
                     iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
                 });
 
             //@ts-ignore
-            await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send({
+            await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send({
                 embeds: [embed]
             });
 
-            try {
-                CurrentPlayingUUID = track.uid;
-                const rs = createAudioResource(ytdl(track.url, { filter: format => format.codecs === 'opus' && format.container === 'webm' }), {
-                    inlineVolume: true,
-                    inputType: StreamType.WebmOpus
-                });
-                CurrentPlayerInstance.play(rs);
-            } catch (e) {
-                console.log(e);
-                //@ts-ignore
-                await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
-                HandlePlayingSession(3);
+            if (track.fromTitle === 1) {
+                try {
+                    const res = await axios.get("https://" + cfg.invidiousEndpoint + "/api/v1/search?type=video&q=" + encodeURIComponent(track.title));
+
+                    if (res.data) {
+                        const searchData = res.data as YouTubeSearchType[];
+                        let searchVideoId = "";
+                        for (let i = 0; i < searchData.length; i++) {
+                            if (searchData[i].type === YouTubeSearchResultType.Video) {
+                                searchVideoId = searchData[i].videoId;
+                                break;
+                            }
+                        }
+
+                        CurrentPlayingUUID = track.uid;
+                        const rs = createAudioResource(ytdl("https://www.youtube.com/watch?v=" + searchVideoId, { filter: format => format.codecs === 'opus' && format.container === 'webm' }), {
+                            inlineVolume: true,
+                            inputType: StreamType.WebmOpus
+                        });
+                        CurrentPlayerInstance.play(rs);
+                    } else {
+                        //@ts-ignore
+                        await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
+                        HandlePlayingSession(3);
+                    }
+                } catch (e) {
+                    //@ts-ignore
+                    await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
+                    HandlePlayingSession(3);
+                }
+            } else {
+                try {
+                    CurrentPlayingUUID = track.uid;
+                    const rs = createAudioResource(ytdl(track.url, { filter: format => format.codecs === 'opus' && format.container === 'webm' }), {
+                        inlineVolume: true,
+                        inputType: StreamType.WebmOpus
+                    });
+                    CurrentPlayerInstance.play(rs);
+                } catch (e) {
+                    console.log(e);
+                    //@ts-ignore
+                    await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Đã xảy ra lỗi trong khi phát bài hát này, đang chuyển qua bài khác...");
+                    HandlePlayingSession(3);
+                }
             }
+
         } else {
             // @ts-ignore
-            await client.guilds.cache.get(serverId).channels.cache.get(CurrentVoiceChannelId).send("🟩 Không có bài nào trong hàng chờ, đang thoát...");
+            await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send("🟩 Không có bài nào trong hàng chờ, đang thoát...");
             DestoryInstance();
         }
     } catch (e) {

@@ -1,11 +1,8 @@
 import { EmbedBuilder, Events, Message } from "discord.js";
-import { readFile } from "node:fs/promises";
-import axios from 'axios';
-
-import botHandle, { globalPrefix } from "../../index.js";
 import log from "../../utils/logger.js";
 import client from "../../client.js";
 import { EmotionType } from "../../types.js";
+import cfg from "../../config.js";
 
 const baseFolder: string = "./gif/";
 
@@ -167,7 +164,7 @@ const evt = {
         // we will prevent it simbot channel
         if (ct.channelId === "1139181936053583904") return;
 
-        if (!ct.content.startsWith(globalPrefix)) return;
+        if (!ct.content.startsWith(cfg.globalPrefix)) return;
 
         const msg = ct.content.slice(1, ct.content.length).split(" ");
 

@@ -1,13 +1,12 @@
-import { EmbedBuilder, Events, Message } from "discord.js";
+import { Events, Message } from "discord.js";
 import { setTimeout as wait } from 'node:timers/promises';
 import { readFile } from 'node:fs/promises';
-
-import { globalPrefix } from "../../index.js";
 
 import client from "../../client.js";
 import log from "../../utils/logger.js";
 import sharp from "sharp";
 import axios from "axios";
+import cfg from "../../config.js";
 
 const evt = {
     name: Events.MessageCreate,
@@ -16,7 +15,7 @@ const evt = {
         // we will prevent it simbot channel
         if (ct.channelId === "1139181936053583904") return;
 
-        if (!ct.content.startsWith(globalPrefix)) return;
+        if (!ct.content.startsWith(cfg.globalPrefix)) return;
 
         const msg = ct.content.slice(1, ct.content.length).split(" ");
 

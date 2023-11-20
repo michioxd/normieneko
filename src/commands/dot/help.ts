@@ -1,7 +1,7 @@
-import { EmbedBuilder, Events, Message } from "discord.js";
+import { Events, Message } from "discord.js";
 
-import { globalPrefix } from "../../index.js";
 import { emotion } from "./emotion.js";
+import cfg from "../../config.js";
 
 const evt = {
     name: Events.MessageCreate,
@@ -10,7 +10,7 @@ const evt = {
         // we will prevent it simbot channel
         if (ct.channelId === "1139181936053583904") return;
 
-        if (!ct.content.startsWith(globalPrefix)) return;
+        if (!ct.content.startsWith(cfg.globalPrefix)) return;
 
         const msg = ct.content.slice(1, ct.content.length).split(" ");
 
