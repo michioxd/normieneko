@@ -4,6 +4,16 @@ import { emotion } from "./emotion.js";
 import cfg from "../../config.js";
 import client from "../../client.js";
 
+const sayLastContent = {
+    content: "",
+    author: "",
+    authorName: "",
+    authorAvatar: "",
+    messageId: "",
+    date: 0
+};
+
+
 const evt = {
     name: Events.MessageCreate,
     once: false,
@@ -21,9 +31,16 @@ const evt = {
                 message += (msg[i] + " ");
             }
             if (!message || message.length < 1) {
-                ct.reply("**Cách dùng: `;say <nội dung>` hoặc `;s <nội dung>`");
+                ct.reply("**Cách dùng:** `;say <nội dung>` hoặc `;s <nội dung>`");
                 return;
             }
+
+            sayLastContent.content = message;
+            sayLastContent.messageId = ct.id;
+            sayLastContent.author = ct.author.id;
+            sayLastContent.authorName = ct.author.displayName;
+            sayLastContent.authorAvatar = ct.author.avatarURL({ forceStatic: true });
+            sayLastContent.date = Date.now();
 
             const channel = client.guilds.cache.get(cfg.serverId).channels.cache.get(ct.channelId);
             if (channel) {
@@ -32,6 +49,25 @@ const evt = {
                 }
                 //@ts-ignore
                 await channel.send(message);
+            }
+        } else if (msg[0] === "whosaid") {
+            if (sayLastContent.content === "") {
+                await ct.reply("⛔ Không có ai gửi gần đây hết!");
+            } else {
+                await ct.reply({
+                    embeds: [{
+                        author: {
+                            name: sayLastContent.authorName,
+                            url: "https://discord.com/users/" + sayLastContent.author,
+                            icon_url: sayLastContent.authorAvatar,
+                        },
+                        description: "```\n" + sayLastContent.content + "\n```\nĐã sử dụng lệnh `;say` (`;s`) để gửi tin nhắn bởi **<@!" + sayLastContent.author + ">** vào lúc **" + (sayLastContent.date.toLocaleString("vi-VN")) + "**\nMessage ID: `" + sayLastContent.messageId + "` | User ID: `" + sayLastContent.author + "`",
+                        footer: {
+                            text: "Ảo Ảnh Xanh",
+                            icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                        }
+                    }]
+                });
             }
         }
 
