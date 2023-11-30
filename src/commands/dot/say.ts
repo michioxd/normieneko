@@ -1,4 +1,4 @@
-import { ChannelType, Events, Message } from "discord.js";
+import { ChannelType, Events, Message, PermissionFlagsBits, PermissionsBitField } from "discord.js";
 
 import { emotion } from "./emotion.js";
 import cfg from "../../config.js";
@@ -51,6 +51,10 @@ const evt = {
                 await channel.send(message);
             }
         } else if (msg[0] === "whosaid") {
+            if (!ct.member.permissionsIn(ct.channelId).has(PermissionFlagsBits.Administrator)) {
+                await ct.reply("⛔ Bạn không có quyền sử dụng lệnh này!");
+                return;
+            }
             if (sayLastContent.content === "") {
                 await ct.reply("⛔ Không có ai gửi gần đây hết!");
             } else {
