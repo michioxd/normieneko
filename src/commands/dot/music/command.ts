@@ -433,7 +433,7 @@ const evt = {
                         return;
                     }
 
-                    LoopAudioUUID = CurrentPlayingUUID;
+                    LoopAudioUUID = "";
                     ResetLoopCount();
                     DestoryInstance();
                     if (msg[1] === "clear") {
@@ -462,7 +462,7 @@ const evt = {
                         LoopAudioUUID = CurrentPlayingUUID;
                         ct.reply("**✅-🔁** Đã bật chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa để tắt");
                     } else {
-                        LoopAudioUUID = CurrentPlayingUUID;
+                        LoopAudioUUID = "";
                         ResetLoopCount();
                         ct.reply("**🚫-🔁** Đã tắt chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa để bật");
                     }
