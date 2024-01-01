@@ -16,9 +16,15 @@ export let VoiceReadyState: boolean = false;
 
 export let VoicePlaying: boolean = false;
 
+export let LoopCount = 0;
+
 export let CurrentPlayerInstance: AudioPlayer = createAudioPlayer();
 
 export let CurrentPlayingUUID = "";
+
+export function ResetLoopCount() {
+    LoopCount = 0;
+}
 
 export async function HandlePlayingSession(type?: number) {
     if (type === 3) CurrentPlayerInstance.stop();
@@ -93,9 +99,13 @@ export async function HandlePlayingSession(type?: number) {
                 }
             }
 
+            if (LoopAudioUUID === CurrentPlayingUUID) {
+                LoopCount++;
+            }
+
             const embed = new EmbedBuilder()
                 .setAuthor({
-                    name: "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? "🔁" : ""),
+                    name: "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? ("(🔁 Đã lặp lại " + LoopCount + " lần") : ""),
                 })
                 .setTitle(track.title)
                 .setURL(track.originalUrl)

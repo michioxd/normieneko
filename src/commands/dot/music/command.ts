@@ -1,7 +1,7 @@
 import { EmbedBuilder, Events, Message } from "discord.js";
 import crypto from "crypto";
 import client from "../../../client.js";
-import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession, VoicePlaying } from "./player.js";
+import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession, ResetLoopCount, VoicePlaying } from "./player.js";
 import { getSpotifyPlaylistId, getSpotifyTrackId, getYouTubePlaylistId, getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
 import { Playlist } from "../../../db.js";
 import axios from "axios";
@@ -461,6 +461,7 @@ const evt = {
                         ct.reply("**✅-🔁** Đã bật chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa để tắt");
                     } else {
                         LoopAudioUUID = CurrentPlayingUUID;
+                        ResetLoopCount();
                         ct.reply("**🚫-🔁** Đã tắt chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa để bật");
                     }
 
