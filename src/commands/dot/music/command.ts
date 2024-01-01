@@ -433,6 +433,8 @@ const evt = {
                         return;
                     }
 
+                    LoopAudioUUID = CurrentPlayingUUID;
+                    ResetLoopCount();
                     DestoryInstance();
                     if (msg[1] === "clear") {
                         await Playlist.destroy({
