@@ -105,7 +105,7 @@ export async function HandlePlayingSession(type?: number) {
 
             const embed = new EmbedBuilder()
                 .setAuthor({
-                    name: "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? ("(🔁 Đã lặp lại " + LoopCount + " lần") : ""),
+                    name: "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? (" (🔁 Đã lặp lại " + LoopCount + " lần)") : ""),
                 })
                 .setTitle(track.title)
                 .setURL(track.originalUrl)
