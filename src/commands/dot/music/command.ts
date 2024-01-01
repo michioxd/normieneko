@@ -458,7 +458,7 @@ const evt = {
 
                     if (LoopAudioUUID === "") {
                         LoopAudioUUID = CurrentPlayingUUID;
-                        ct.reply("**✅-🔁** Đã bật chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa đễ tắt");
+                        ct.reply("**✅-🔁** Đã bật chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa để tắt");
                     } else {
                         LoopAudioUUID = CurrentPlayingUUID;
                         ct.reply("**🚫-🔁** Đã tắt chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa để bật");

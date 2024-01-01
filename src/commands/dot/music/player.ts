@@ -46,22 +46,6 @@ export async function HandlePlayingSession(type?: number) {
                     ['id', 'ASC'],
                 ]
             });
-            const embed = new EmbedBuilder()
-                .setAuthor({
-                    name: "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? "🔁" : ""),
-                })
-                .setTitle(track.title)
-                .setURL(track.originalUrl)
-                .setDescription(`Được thêm bởi **<@!${track.addedBy}>**${track.fromTitle ? " từ Spotify" : ""} vào lúc **${(new Date(track.addedAt)).toLocaleString('vi-VN')}**${nextTrack ? `\n▶️ Bài tiếp theo: **[${nextTrack.title}](${nextTrack.originalUrl})**` : ""}`)
-                .setFooter({
-                    text: "Ảo Ảnh Xanh",
-                    iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
-                });
-
-            //@ts-ignore
-            await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send({
-                embeds: [embed]
-            });
 
             if (track.fromTitle === 1) {
                 try {
@@ -108,6 +92,23 @@ export async function HandlePlayingSession(type?: number) {
                     HandlePlayingSession(3);
                 }
             }
+
+            const embed = new EmbedBuilder()
+                .setAuthor({
+                    name: "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? "🔁" : ""),
+                })
+                .setTitle(track.title)
+                .setURL(track.originalUrl)
+                .setDescription(`Được thêm bởi **<@!${track.addedBy}>**${track.fromTitle ? " từ Spotify" : ""} vào lúc **${(new Date(track.addedAt)).toLocaleString('vi-VN')}**${nextTrack ? `\n▶️ Bài tiếp theo: **[${nextTrack.title}](${nextTrack.originalUrl})**` : ""}`)
+                .setFooter({
+                    text: "Ảo Ảnh Xanh",
+                    iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                });
+
+            //@ts-ignore
+            await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send({
+                embeds: [embed]
+            });
 
         } else {
             // @ts-ignore
