@@ -2,7 +2,7 @@ import { EmbedBuilder, Events, Message } from "discord.js";
 import crypto from "crypto";
 import client from "../../../client.js";
 import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession, ResetLoopCount, VoicePlaying } from "./player.js";
-import { getSpotifyPlaylistId, getSpotifyTrackId, getYouTubePlaylistId, getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
+import { getSpotifyAlbumId, getSpotifyPlaylistId, getSpotifyTrackId, getYouTubePlaylistId, getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
 import { Playlist } from "../../../db.js";
 import axios from "axios";
 import ytdl from "ytdl-core";
@@ -12,6 +12,7 @@ import cfg from "../../../config.js";
 import { GetAccessToken } from "../../../modules/spotify.js";
 import { SpotifyPlaylistType } from "../../../types/SpotifyPlaylistType.js";
 import { SpotifyTrackType } from "../../../types/SpotifyTrackType.js";
+import { SpotifyAlbumType } from "../../../types/SpotifyAlbumType.js";
 
 export let LoopAudioUUID: string = "";
 
@@ -107,8 +108,82 @@ const evt = {
                     }
 
                     let targetUrl = "";
+                    if (isValidUrl(msg[1]) && getSpotifyAlbumId(msg[1])) {
+                        // handle spotfiy playlist
+                        const playlistSpotifyRp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu của album trên Spotify, vui lòng chờ...*");
 
-                    if (isValidUrl(msg[1]) && getSpotifyPlaylistId(msg[1])) {
+                        try {
+                            const getAccessToken = await GetAccessToken();
+                            if (getAccessToken === false) {
+                                await playlistSpotifyRp.edit("**❌ Lỗi**: Không thể kết nối tới Spotify!");
+                                return;
+                            }
+                            const getAlbumData = await axios.get(`https://api.spotify.com/v1/albums/${getSpotifyAlbumId(msg[1])}`, {
+                                headers: {
+                                    'Authorization': `Bearer ${getAccessToken}`,
+                                }
+                            });
+
+                            if (getAlbumData.data) {
+                                const alSpotifyRes = getAlbumData.data as SpotifyAlbumType;
+                                if (alSpotifyRes.tracks.items.length < 0) {
+                                    await playlistSpotifyRp.edit("**❌ Album này trống!**");
+                                    return;
+                                }
+
+                                let insertData = [];
+
+                                for (let i = 0; i < alSpotifyRes.tracks.items.length; i++) {
+                                    const item = alSpotifyRes.tracks.items[i];
+                                    let artist = "";
+                                    for (let i = 0; i < item.artists.length; i++) {
+                                        artist += (item.artists[i].name + (i !== item.artists.length - 1 ? ", " : ""));
+                                    }
+                                    insertData = [
+                                        ...insertData,
+                                        {
+                                            uid: crypto.randomUUID(),
+                                            addedAt: Date.now(),
+                                            addedBy: ct.author.id,
+                                            url: "https://open.spotify.com/track/" + item.id,
+                                            played: 0,
+                                            title: artist + " - " + item.name,
+                                            streamingType: 0,
+                                            fromTitle: 1,
+                                            originalUrl: "https://open.spotify.com/track/" + item.id
+                                        }
+                                    ]
+                                }
+
+                                await Playlist.bulkCreate(insertData);
+
+                                await playlistSpotifyRp.edit({
+                                    content: "✅ Đã thêm album từ Spotify vào hàng chờ!",
+                                    embeds: [{
+                                        author: {
+                                            name: alSpotifyRes.name,
+                                            url: "https://open.spotify.com/playlist/" + alSpotifyRes.id
+                                        },
+                                        thumbnail: {
+                                            url: alSpotifyRes.images[0].url
+                                        },
+                                        description: `Đã thêm **${alSpotifyRes.tracks.items.length}** bài hát từ album Spotify vào hàng chờ bởi <@!${ct.author.id}>`,
+                                        footer: {
+                                            text: "Ảo Ảnh Xanh",
+                                            icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                                        }
+                                    }]
+                                });
+                            } else {
+                                await playlistSpotifyRp.edit("**❌ Lỗi**: Không thể lấy album từ Spotify, vui lòng thử lại sau! `[EMPTY_DATA]`");
+                                return;
+                            }
+
+                        } catch (e) {
+                            await playlistSpotifyRp.edit("**❌ Lỗi**: Không thể lấy album từ Spotify, vui lòng thử lại sau! `[CATCH_ERR]`");
+                            return;
+                        }
+                    } else if (isValidUrl(msg[1]) && getSpotifyPlaylistId(msg[1])) {
                         // handle spotfiy playlist
                         const playlistSpotifyRp = await ct.reply("*<a:aax_vailolae:1132367020856442940> Đang lấy dữ liệu của playlist trên Spotify, vui lòng chờ...*");
 

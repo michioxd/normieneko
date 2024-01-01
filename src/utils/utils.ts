@@ -41,6 +41,14 @@ export function getSpotifyPlaylistId(url: string) {
     }
     return "";
 }
+export function getSpotifyAlbumId(url: string) {
+    const mainUrl = new URL(url);
+    if (mainUrl.hostname.includes("open.spotify.com") && mainUrl.pathname.startsWith("/album/")) {
+        const splitUrl = mainUrl.pathname.split("/");
+        return splitUrl[2] && splitUrl[2].length > 0 ? splitUrl[2] : "";
+    }
+    return "";
+}
 
 export function getSpotifyTrackId(url: string) {
     const mainUrl = new URL(url);
