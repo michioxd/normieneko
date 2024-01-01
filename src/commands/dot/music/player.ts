@@ -18,6 +18,7 @@ export let VoicePlaying: boolean = false;
 
 export let LoopCount = 0;
 export let LastErrorAudioUUID = "";
+export let LastErrorCount = 0;
 
 export let CurrentPlayerInstance: AudioPlayer = createAudioPlayer();
 
@@ -30,6 +31,10 @@ export function ResetLoopCount() {
 export async function HandlePlayingSession(type?: number) {
     if (type === 3) CurrentPlayerInstance.stop();
     if (VoicePlaying === true) return;
+    if (LastErrorAudioUUID === CurrentPlayingUUID && LastErrorCount > 3) {
+        LastErrorAudioUUID = "";
+        LastErrorCount = 0;
+    }
     if (CurrentPlayingUUID !== "" && LoopAudioUUID !== CurrentPlayingUUID && LastErrorAudioUUID !== CurrentPlayingUUID) {
         try {
             await Playlist.update({ played: 1 }, { where: { uid: CurrentPlayingUUID } });
@@ -104,9 +109,13 @@ export async function HandlePlayingSession(type?: number) {
                 LoopCount++;
             }
 
+            if (LastErrorAudioUUID === CurrentPlayingUUID) {
+                LastErrorCount++;
+            }
+
             const embed = new EmbedBuilder()
                 .setAuthor({
-                    name: (LastErrorAudioUUID === CurrentPlayingUUID ? "[Đang thử phát lại do lỗi] " : "") + "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? (" (🔁 Đã lặp lại " + LoopCount + " lần)") : ""),
+                    name: (LastErrorAudioUUID === CurrentPlayingUUID ? "[Đang thử phát lại do lỗi, lần " + LastErrorCount + "/3] " : "") + "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? (" (🔁 Đã lặp lại " + LoopCount + " lần)") : ""),
                 })
                 .setTitle(track.title)
                 .setURL(track.originalUrl)
@@ -115,6 +124,8 @@ export async function HandlePlayingSession(type?: number) {
                     text: "Ảo Ảnh Xanh",
                     iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
                 });
+
+
 
             LastErrorAudioUUID = "";
 
