@@ -1,7 +1,7 @@
 import { EmbedBuilder, Events, Message } from "discord.js";
 import crypto from "crypto";
 import client from "../../../client.js";
-import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession } from "./player.js";
+import { CreateVoiceInstance, CurrentPlayerInstance, CurrentPlayingUUID, CurrentVoiceChannelId, CurrentVoiceInstance, DestoryInstance, HandlePlayingSession, VoicePlaying } from "./player.js";
 import { getSpotifyPlaylistId, getSpotifyTrackId, getYouTubePlaylistId, getYouTubeVideoId, isValidUrl } from "../../../utils/utils.js";
 import { Playlist } from "../../../db.js";
 import axios from "axios";
@@ -12,6 +12,8 @@ import cfg from "../../../config.js";
 import { GetAccessToken } from "../../../modules/spotify.js";
 import { SpotifyPlaylistType } from "../../../types/SpotifyPlaylistType.js";
 import { SpotifyTrackType } from "../../../types/SpotifyTrackType.js";
+
+export let LoopAudioUUID: string = "";
 
 const evt = {
     name: Events.MessageCreate,
@@ -74,7 +76,7 @@ const evt = {
             return;
         }
 
-        if (msg[0] === "play" || msg[0] === "stop" || msg[0] === "skip") {
+        if (msg[0] === "play" || msg[0] === "stop" || msg[0] === "skip" || msg[0] === "loop") {
             const guild = client.guilds.cache.get(cfg.serverId);
             const mem = guild.members.cache.get(ct.author.id);
 
@@ -442,6 +444,26 @@ const evt = {
                         await Playlist.update({ played: 1 }, { where: { uid: CurrentPlayingUUID } });
                         await voiceChannel.send("**🛑 Đã dừng!**");
                     }
+                    break;
+                case "loop":
+                    if (CurrentVoiceInstance !== null && CurrentVoiceChannelId !== voiceChannel.id) {
+                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot Ảo Ảnh Xanh đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
+                    } else if (CurrentVoiceInstance === null) {
+                        ct.reply("**❌ Lỗi**: Hiện tại đang không phát ở bất cứ kênh nào!");
+                        return;
+                    } else if (CurrentPlayingUUID === "") {
+                        ct.reply("**❌ Lỗi**: Hiện tại đang không phát nhạc nào cả!");
+                        return;
+                    }
+
+                    if (LoopAudioUUID === "") {
+                        LoopAudioUUID = CurrentPlayingUUID;
+                        ct.reply("**✅-🔁** Đã bật chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa đễ tắt");
+                    } else {
+                        LoopAudioUUID = CurrentPlayingUUID;
+                        ct.reply("**🚫-🔁** Đã tắt chế độ lặp lại, gọi lại lệnh này thêm 1 lần nữa để bật");
+                    }
+
                     break;
             }
         }

@@ -8,6 +8,7 @@ import { Op, Sequelize } from "sequelize";
 import cfg from "../../../config.js";
 import axios from "axios";
 import { YouTubeSearchResultType, YouTubeSearchType } from "../../../types/YouTubeSearchType.js";
+import { LoopAudioUUID } from "./command.js";
 
 export let CurrentVoiceChannelId: string = "";
 export let CurrentVoiceInstance: VoiceConnection | null = null;
@@ -22,7 +23,7 @@ export let CurrentPlayingUUID = "";
 export async function HandlePlayingSession(type?: number) {
     if (type === 3) CurrentPlayerInstance.stop();
     if (VoicePlaying === true) return;
-    if (CurrentPlayingUUID !== "") {
+    if (CurrentPlayingUUID !== "" && LoopAudioUUID !== CurrentPlayingUUID) {
         try {
             await Playlist.update({ played: 1 }, { where: { uid: CurrentPlayingUUID } });
         } catch (e) { }
@@ -47,7 +48,7 @@ export async function HandlePlayingSession(type?: number) {
             });
             const embed = new EmbedBuilder()
                 .setAuthor({
-                    name: "Đang bắt đầu phát",
+                    name: "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? "🔁" : ""),
                 })
                 .setTitle(track.title)
                 .setURL(track.originalUrl)
