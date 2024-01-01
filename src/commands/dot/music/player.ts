@@ -31,7 +31,7 @@ export function ResetLoopCount() {
 export async function HandlePlayingSession(type?: number) {
     if (type === 3) CurrentPlayerInstance.stop();
     if (VoicePlaying === true) return;
-    if (LastErrorAudioUUID === CurrentPlayingUUID && LastErrorCount > 3) {
+    if (LastErrorAudioUUID === CurrentPlayingUUID && LastErrorCount >= 3) {
         LastErrorAudioUUID = "";
         LastErrorCount = 0;
     }
