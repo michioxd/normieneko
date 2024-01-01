@@ -54,24 +54,6 @@ export async function HandlePlayingSession(type?: number) {
                 ]
             });
 
-            if (LoopAudioUUID === CurrentPlayingUUID) {
-                LoopCount++;
-            }
-
-            const embed = new EmbedBuilder()
-                .setAuthor({
-                    name: (LastErrorAudioUUID === CurrentPlayingUUID ? "[Đang thử phát lại do lỗi] " : "") + "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? (" (🔁 Đã lặp lại " + LoopCount + " lần)") : ""),
-                })
-                .setTitle(track.title)
-                .setURL(track.originalUrl)
-                .setDescription(`Được thêm bởi **<@!${track.addedBy}>**${track.fromTitle ? " từ Spotify" : ""} vào lúc **${(new Date(track.addedAt)).toLocaleString('vi-VN')}**${nextTrack ? `\n▶️ Bài tiếp theo: **[${nextTrack.title}](${nextTrack.originalUrl})**` : ""}`)
-                .setFooter({
-                    text: "Ảo Ảnh Xanh",
-                    iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
-                });
-
-            LastErrorAudioUUID = "";
-
             if (track.fromTitle === 1) {
                 try {
                     const res = await axios.get("https://" + cfg.invidiousEndpoint + "/api/v1/search?type=video&q=" + encodeURIComponent(track.title));
@@ -117,6 +99,24 @@ export async function HandlePlayingSession(type?: number) {
                     HandlePlayingSession(3);
                 }
             }
+
+            if (LoopAudioUUID === CurrentPlayingUUID) {
+                LoopCount++;
+            }
+
+            const embed = new EmbedBuilder()
+                .setAuthor({
+                    name: (LastErrorAudioUUID === CurrentPlayingUUID ? "[Đang thử phát lại do lỗi] " : "") + "Đang bắt đầu phát" + (LoopAudioUUID === CurrentPlayingUUID ? (" (🔁 Đã lặp lại " + LoopCount + " lần)") : ""),
+                })
+                .setTitle(track.title)
+                .setURL(track.originalUrl)
+                .setDescription(`Được thêm bởi **<@!${track.addedBy}>**${track.fromTitle ? " từ Spotify" : ""} vào lúc **${(new Date(track.addedAt)).toLocaleString('vi-VN')}**${nextTrack ? `\n▶️ Bài tiếp theo: **[${nextTrack.title}](${nextTrack.originalUrl})**` : ""}`)
+                .setFooter({
+                    text: "Ảo Ảnh Xanh",
+                    iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                });
+
+            LastErrorAudioUUID = "";
 
             //@ts-ignore
             await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send({
