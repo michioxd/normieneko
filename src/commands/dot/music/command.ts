@@ -27,7 +27,7 @@ const evt = {
 
         const msg = ct.content.slice(1, ct.content.length).split(" ");
 
-        if (msg[0] === "queue") {
+        if (msg[0] === "queue" || msg[0] === "q") {
             if (msg[1] === "clear") {
                 await Playlist.destroy({
                     where: {},
@@ -77,7 +77,7 @@ const evt = {
             return;
         }
 
-        if (msg[0] === "play" || msg[0] === "stop" || msg[0] === "skip" || msg[0] === "loop") {
+        if (msg[0] === "play" || msg[0] === "p" || msg[0] === "stop" || msg[0] === "skip" || msg[0] === "loop") {
             const guild = client.guilds.cache.get(cfg.serverId);
             const mem = guild.members.cache.get(ct.author.id);
 
@@ -89,8 +89,8 @@ const evt = {
             const voiceChannel = mem.voice.channel;
 
             switch (msg[0]) {
+                case "p":
                 case "play":
-
                     if (CurrentVoiceInstance !== null && CurrentVoiceChannelId !== voiceChannel.id) {
                         ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot Ảo Ảnh Xanh đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
                         return;
