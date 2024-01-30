@@ -75,7 +75,6 @@ export async function HandlePlayingSession(type?: number) {
 
                         CurrentPlayingUUID = track.uid;
                         const rs = createAudioResource(ytdl("https://www.youtube.com/watch?v=" + searchVideoId, { filter: format => format.codecs === 'opus' && format.container === 'webm' }), {
-                            inlineVolume: true,
                             inputType: StreamType.WebmOpus
                         });
                         CurrentPlayerInstance.play(rs);
