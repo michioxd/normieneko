@@ -47,7 +47,7 @@ client.once(Events.ClientReady, async c => {
                 status: "online",
                 activities: [
                     {
-                        name: `ecchi nii-san nya~`,
+                        name: `DIT ME LIAM DIT ME LIAM`,
                         type: ActivityType.Watching,
                         url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     }
