@@ -6,7 +6,8 @@ import log from "./utils/logger.js";
 
 const db = new Sequelize({
     dialect: 'sqlite',
-    storage: './db.sqlite'
+    storage: './db.sqlite',
+    logging: false
 });
 
 

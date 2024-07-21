@@ -31,8 +31,8 @@ const evt = {
                 .setDescription(notifyContent)
                 .setColor(notifySideColor)
                 .setFooter({
-                    text: "Ảo Ảnh Xanh",
-                    iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                    text: "BÚN GREEN",
+                    iconURL: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp",
                 })
                 .setTimestamp();
 

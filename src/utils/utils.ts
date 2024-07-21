@@ -58,3 +58,33 @@ export function getSpotifyTrackId(url: string) {
     }
     return "";
 }
+
+export function convertToSeconds(timeStr: string): number | false {
+    const regex = /^(\d+)([smhdwySMHDWY]?)$/;
+    const match = timeStr.match(regex);
+
+    if (!match) {
+        return false;
+    }
+
+    const value = parseInt(match[1], 10);
+    const unit = match[2].toLowerCase();
+
+    switch (unit) {
+        case 's':
+        case '':
+            return value;
+        case 'm':
+            return value * 60;
+        case 'h':
+            return value * 3600;
+        case 'd':
+            return value * 86400;
+        case 'w':
+            return value * 604800;
+        case 'y':
+            return value * 31536000;
+        default:
+            return false;
+    }
+}

@@ -4,19 +4,19 @@ import { Giveaway, GiveawayJoined } from "../db.js";
 import log from "../utils/logger.js";
 import { Sequelize } from "sequelize";
 import crypto from "crypto";
+import { convertToSeconds } from "../utils/utils.js";
 
 const command = {
     data: new SlashCommandBuilder()
-        .setName('admingiveaway')
+        .setName('bungiveaway')
         .setDescription('[ADMIN] Giveaway')
         .addStringOption(option =>
             option.setName('content')
                 .setDescription('Nội dung')
                 .setRequired(true))
-        .addIntegerOption(option =>
+        .addStringOption(option =>
             option.setName('time')
-                .setDescription('Thời gian kết thúc, định dạng giây, ví dụ 10 = 10 giây, 20 = 20 giây, 300 = 5 phút, 3600 = 1 tiếng')
-                .setMinValue(1)
+                .setDescription('Thời gian kết thúc, 10 = 10 giây, 20m = 20 phút, tương tự với h, d, w, y = giờ, ngày, tuần, năm')
                 .setRequired(true))
         .addIntegerOption(option =>
             option.setName('count')
@@ -32,13 +32,22 @@ const command = {
             .setDescription("Ping role Ping GA"))
         .addStringOption(option =>
             option.setName("channel")
-                .setChoices({
-                    name: "Giveaway", value: "1131256754420854854"
-                })
-                .setDescription("Kênh để gửi GA"))
+                .setDescription("Kênh để gửi GA, để trống sẽ là kênh hiện tại, để `GA` sẽ là kênh GA, hoặc tag kênh vào"))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
-        const channel = client.channels.cache.get(interaction.options.getString('channel') ?? '1131256754420854854');
+        let getChannelId = interaction.options.getString('channel');
+
+        if (getChannelId === "GA" || getChannelId === "ga") {
+            getChannelId = '1131256754420854854';
+        } else if (getChannelId) {
+            if (getChannelId.startsWith("<#") && getChannelId.endsWith(">")) {
+                getChannelId = getChannelId.slice(2, -1);
+            }
+        } else {
+            getChannelId = interaction.channelId;
+        }
+
+        const channel = client.channels.cache.get(getChannelId);
 
         //@ts-ignore
         channel.sendTyping();
@@ -49,16 +58,22 @@ const command = {
         const content = interaction.options.getString('content');
         const winners = interaction.options.getInteger('count_winners');
         const joiners = interaction.options.getInteger('count');
-        const expireTime = interaction.options.getInteger('time');
+        const expireTime = convertToSeconds(interaction.options.getString('time'));
+
+        if (!expireTime) {
+            await interaction.reply({ content: 'Thời gian không hợp lệ!', ephemeral: true });
+            return;
+        }
+
         const expired = currentTime + expireTime * 1000;
 
         const embed = new EmbedBuilder()
             .setTitle(content)
-            .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: 0\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+            .setDescription(`**Kết thúc vào:** ${("<t:" + Math.round((new Date(expired)).getTime() / 1000) + ":R> ") + (new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: 0\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
             .setColor("#44ff00")
             .setFooter({
-                text: "Ảo Ảnh Xanh Giveaway",
-                iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                text: "BÚN GREEN Giveaway",
+                iconURL: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp",
             })
             .setTimestamp();
 
@@ -93,7 +108,10 @@ const command = {
                 components: [row],
             });
 
-            await interaction.reply({ content: '**Đã tạo GA thành công!**\nUUID: `' + guid + '`' });
+            await interaction.reply({
+                content: '**Đã tạo GA thành công!**\nUUID: `' + guid + '`',
+                ephemeral: true
+            });
 
             let ok = false;
 
@@ -123,11 +141,11 @@ const command = {
                                                 const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
                                                 const updateEmbed = new EmbedBuilder()
                                                     .setTitle(content)
-                                                    .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+                                                    .setDescription(`**Kết thúc vào:** ${("<t:" + Math.round((new Date(expired)).getTime() / 1000) + ":R> ") + (new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
                                                     .setColor("#44ff00")
                                                     .setFooter({
-                                                        text: "Ảo Ảnh Xanh Giveaway",
-                                                        iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                                        text: "BÚN GREEN Giveaway",
+                                                        iconURL: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp",
                                                     })
                                                     .setTimestamp();
 
@@ -143,11 +161,11 @@ const command = {
                                             const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
                                             const updateEmbed = new EmbedBuilder()
                                                 .setTitle(content)
-                                                .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+                                                .setDescription(`**Kết thúc vào:** ${("<t:" + Math.round((new Date(expired)).getTime() / 1000) + ":R> ") + (new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
                                                 .setColor("#44ff00")
                                                 .setFooter({
-                                                    text: "Ảo Ảnh Xanh Giveaway",
-                                                    iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                                    text: "BÚN GREEN Giveaway",
+                                                    iconURL: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp",
                                                 })
                                                 .setTimestamp();
 
@@ -168,11 +186,11 @@ const command = {
                                     const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
                                     const updateEmbed = new EmbedBuilder()
                                         .setTitle(content)
-                                        .setDescription(`**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
+                                        .setDescription(`**Kết thúc vào:** ${("<t:" + Math.round((new Date(expired)).getTime() / 1000) + ":R> ") + (new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}\n\n*Nhấn nút phía dưới để tham gia, nếu đã tham gia, nhấn thêm 1 lần nữa để huỷ!*`)
                                         .setColor("#44ff00")
                                         .setFooter({
-                                            text: "Ảo Ảnh Xanh Giveaway",
-                                            iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                            text: "BÚN GREEN Giveaway",
+                                            iconURL: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp",
                                         })
                                         .setTimestamp();
 
@@ -187,18 +205,18 @@ const command = {
                                 const joinedLen = await GiveawayJoined.count({ where: { gaUuid: guid } });
                                 let resultGA = "";
                                 GA_Join.map((d, i) => {
-                                    client.users.cache.get(d.uid).send("## 🎉 Chúc mừng bạn đã trúng Giveaway **" + content + "** của ngày " + (new Date(expired).toLocaleString('vi-VN')) + "\n### Bạn vui lòng hãy liên hệ tới Owner của server **Ảo Ảnh Xanh** để nhận giải!!!\nUUID Xác nhận tham gia: `" + d.uuid + "`");
+                                    client.users.cache.get(d.uid).send("## 🎉 Chúc mừng bạn đã trúng Giveaway **" + content + "** của ngày " + (new Date(expired).toLocaleString('vi-VN')) + "\n### Bạn vui lòng hãy liên hệ tới Owner của server **BÚN GREEN** để nhận giải!!!\nUUID Xác nhận tham gia: `" + d.uuid + "`");
                                     resultGA += ((i + 1) + ". <@!" + d.uid + ">\n");
                                 });
                                 await Giveaway.update({ done: 1 }, { where: { uuid: guid } });
 
                                 const ResultEmbed = new EmbedBuilder()
                                     .setTitle("[ĐÃ KẾT THÚC] " + content)
-                                    .setDescription(`**🎉 Người trúng Giveaway**:\n${resultGA ? resultGA : "*Không có ai trúng Giveaway :(*"}\n*Những người thắng Giveaway xin vui lòng kiểm tra DMs của bot đã gửi tới bạn!*\n\n**Kết thúc vào:** ${(new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}`)
-                                    .setColor("#44ff00")
+                                    .setDescription(`**🎉 Người trúng Giveaway**:\n${resultGA ? resultGA : "*Không có ai trúng Giveaway :(*"}\n*Những người thắng Giveaway xin vui lòng kiểm tra DMs của bot đã gửi tới bạn!*\n\n**Kết thúc vào:** ${("<t:" + Math.round((new Date(expired)).getTime() / 1000) + ":R> ") + (new Date(expired).toLocaleString('vi-VN'))}\n**Số người có thể tham gia:** ${joiners > 0 ? joiners : "Không giới hạn"}\n**Đã tham gia**: ${joinedLen}\n**Thắng:** ${winners}`)
+                                    .setColor("#ef2d56")
                                     .setFooter({
-                                        text: "Ảo Ảnh Xanh Giveaway",
-                                        iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                        text: "BÚN GREEN Giveaway",
+                                        iconURL: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp",
                                     })
                                     .setTimestamp();
 

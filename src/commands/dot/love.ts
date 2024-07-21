@@ -130,8 +130,8 @@ const evt = {
                     {
                         input: Buffer.from(
                             `<svg width="200" height="50">
-                            <text x="50.5%" y="50.5%" font-size="20" fill="#FFF" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
-                            <text x="50%" y="50%" font-size="20" fill="#57FF70" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">Ảo Ảnh Xanh</text>
+                            <text x="50.5%" y="50.5%" font-size="20" fill="#FFF" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">BÚN GREEN</text>
+                            <text x="50%" y="50%" font-size="20" fill="#57FF70" font-family="Google Sans" font-weight="bold" dominant-baseline="middle" text-anchor="middle">BÚN GREEN</text>
 
                             <text x="50.5%" y="80.5%" font-size="14" fill="#FFF" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">discord.gg/aoanhxanh</text>
                             <text x="50%" y="80%" font-size="14" fill="#57FF70" font-family="Google Sans" dominant-baseline="middle" text-anchor="middle">discord.gg/aoanhxanh</text>

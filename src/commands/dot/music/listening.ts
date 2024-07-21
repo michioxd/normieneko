@@ -18,7 +18,7 @@ const evt = {
         if (voiceChannel?.type === ChannelType.GuildVoice) {
             if (voiceChannel?.members.size <= 1) {
                 //@ts-ignore
-                await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Bạn đã để bot Ảo Ảnh Xanh ở một mình :sob:, đang rời đi...");
+                await client.guilds.cache.get(cfg.serverId).channels.cache.get(CurrentVoiceChannelId).send("❌ Bạn đã để bot BÚN GREEN ở một mình :sob:, đang rời đi...");
                 DestoryInstance();
             }
         }

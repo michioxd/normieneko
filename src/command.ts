@@ -17,8 +17,11 @@ const cmds: CommandType[] = [
     birthday,
 
 
+    //@ts-ignore
     admin_giveaway,
+    //@ts-ignore
     admin_createNotify,
+    //@ts-ignore
     admin_message
 ];
 

@@ -69,8 +69,8 @@ const evt = {
                     },
                     description: `${records}\n📖 Trang **${page}** trên **${totalPage}** trong tổng số **${totalQuery}**${page + 1 <= totalPage ? `\n▶️ Qua trang tiếp theo: \`;queue ${page + 1}\`` : ""}\n🗑️ Xoá tất cả: \`;queue clear\``,
                     footer: {
-                        text: "Ảo Ảnh Xanh",
-                        icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                        text: "BÚN GREEN",
+                        icon_url: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp"
                     }
                 }]
             });
@@ -92,7 +92,7 @@ const evt = {
                 case "p":
                 case "play":
                     if (CurrentVoiceInstance !== null && CurrentVoiceChannelId !== voiceChannel.id) {
-                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot Ảo Ảnh Xanh đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
+                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot BÚN GREEN đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
                         return;
                     }
 
@@ -169,8 +169,8 @@ const evt = {
                                         },
                                         description: `Đã thêm **${alSpotifyRes.tracks.items.length}** bài hát từ album Spotify vào hàng chờ bởi <@!${ct.author.id}>`,
                                         footer: {
-                                            text: "Ảo Ảnh Xanh",
-                                            icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                                            text: "BÚN GREEN",
+                                            icon_url: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp"
                                         }
                                     }]
                                 });
@@ -244,8 +244,8 @@ const evt = {
                                         },
                                         description: `Đã thêm **${plSpotifyRes.tracks.items.length}** bài hát từ playlist Spotify vào hàng chờ bởi <@!${ct.author.id}>`,
                                         footer: {
-                                            text: "Ảo Ảnh Xanh",
-                                            icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                                            text: "BÚN GREEN",
+                                            icon_url: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp"
                                         }
                                     }]
                                 });
@@ -299,8 +299,8 @@ const evt = {
                                     .setImage(trackSpotifyRes.album.images[0].url)
                                     .setColor("#f50018")
                                     .setFooter({
-                                        text: "Ảo Ảnh Xanh",
-                                        iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                        text: "BÚN GREEN",
+                                        iconURL: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp",
                                     })
                                     .setTimestamp();
 
@@ -363,8 +363,8 @@ const evt = {
                                         },
                                         description: `Đã thêm **${playlistResponse.videos.length}** bài hát vào hàng chờ bởi <@!${ct.author.id}>`,
                                         footer: {
-                                            text: "Ảo Ảnh Xanh",
-                                            icon_url: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png"
+                                            text: "BÚN GREEN",
+                                            icon_url: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp"
                                         }
                                     }]
                                 });
@@ -438,8 +438,8 @@ const evt = {
                                         .setImage(details.thumbnails[details.thumbnails.length - 1].url)
                                         .setColor("#f50018")
                                         .setFooter({
-                                            text: "Ảo Ảnh Xanh",
-                                            iconURL: "https://cdn.discordapp.com/attachments/1132959792072237138/1135220931472654397/3FA86C9B-C40F-456A-A637-9D6C39EAA38B.png",
+                                            text: "BÚN GREEN",
+                                            iconURL: "https://cdn.discordapp.com/icons/1126875840936955934/b663c39f29807922215044d69a0d0697.webp",
                                         })
                                         .setTimestamp();
 
@@ -478,7 +478,7 @@ const evt = {
                 case "skip":
 
                     if (CurrentVoiceInstance !== null && CurrentVoiceChannelId !== voiceChannel.id) {
-                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot Ảo Ảnh Xanh đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
+                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot BÚN GREEN đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
                         return;
                     } else if (CurrentVoiceInstance === null) {
                         ct.reply("**❌ Lỗi**: Hiện tại đang không phát ở bất cứ kênh nào!");
@@ -503,7 +503,7 @@ const evt = {
                     break;
                 case "stop":
                     if (CurrentVoiceInstance !== null && CurrentVoiceChannelId !== voiceChannel.id) {
-                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot Ảo Ảnh Xanh đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
+                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot BÚN GREEN đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
                         return;
                     } else if (CurrentVoiceInstance === null) {
                         ct.reply("**❌ Lỗi**: Hiện tại đang không phát ở bất cứ kênh nào!");
@@ -526,7 +526,7 @@ const evt = {
                     break;
                 case "loop":
                     if (CurrentVoiceInstance !== null && CurrentVoiceChannelId !== voiceChannel.id) {
-                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot Ảo Ảnh Xanh đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
+                        ct.reply("**❌ Lỗi**: Bạn đã vào channel mà không có bot BÚN GREEN đang ở trong đó, vui lòng chuyển qua channel có bot AAX!");
                     } else if (CurrentVoiceInstance === null) {
                         ct.reply("**❌ Lỗi**: Hiện tại đang không phát ở bất cứ kênh nào!");
                         return;
